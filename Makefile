@@ -1,6 +1,8 @@
 STUID = 231098216
 STUNAME = 田博文
 
+export TOKEN=fwoQWPF4
+
 # DO NOT modify the following code!!!
 
 GITFLAGS = -q --author='tracer-ics2024 <tracer@njuics.org>' --no-verify --allow-empty
@@ -18,6 +20,6 @@ _default:
 
 submit:
 	git gc
-	STUID=$(STUID) STUNAME=$(STUNAME) bash -c "$$(curl -s http://why.ink:8080/static/submit.sh)"
+	STUID=$(STUID) STUNAME=$(STUNAME) bash -c "$$(curl -s http://175.24.131.173:8080/static/submit.sh)"
 
 .PHONY: default submit
