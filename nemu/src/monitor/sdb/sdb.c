@@ -56,7 +56,7 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
-//static int cmd_info(char *args);
+static int cmd_info(char *args);
 
 //static int cmd_x(char *args);
 
@@ -70,7 +70,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   /* TODO: Add more commands */
   { "si", "Step into the next instruction, entering functions if necessary", cmd_si },
- // { "info", "Show information about a specific topic", cmd_info },
+  { "info", "Show information about a specific topic", cmd_info },
  // { "x", "Examine memory: x/N EXPR", cmd_x },
  // { "p", "Print the value of an expression: p EXPR", cmd_p },
  // { "w", "Set a watchpoint: w EXPR", cmd_w },
@@ -113,6 +113,19 @@ static int cmd_si(char *args){
                          return 0;}}
          cpu_exec(steps);
          return 0;}
+
+static int cmd_info(char *args){
+	char *arg=strtok(NULL," ");
+	if (arg==NULL)
+		printf("Error.No input is catched.");
+	else if (strcmp(arg,"r")==0)
+		isa_reg_display();
+	else if (strcmp("w",arg)==0)
+		printf("To be realize");
+	else
+		printf("Error!No command like this.");
+	return 0;
+}	
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;
