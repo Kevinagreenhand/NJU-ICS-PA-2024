@@ -62,9 +62,13 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
   /* TODO: Add more commands */
-
+  { "si", "Step into the next instruction, entering functions if necessary", cmd_si },
+  { "info", "Show information about a specific topic", cmd_info },
+  { "x", "Examine memory: x/N EXPR", cmd_x },
+  { "p", "Print the value of an expression: p EXPR", cmd_p },
+  { "w", "Set a watchpoint: w EXPR", cmd_w },
+  { "d", "Delete a watchpoint by number: d N", cmd_d },
 };
 
 #define NR_CMD ARRLEN(cmd_table)
