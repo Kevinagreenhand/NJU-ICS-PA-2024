@@ -128,7 +128,7 @@ static int cmd_info(char *args){
 	return 0;
 }	
 
-static int cmd_x(char *args){
+static int cmd_x(char *args){//still some work to do
 	char *N=strtok(NULL," ");
 	char *expr=strtok(NULL," ");
 	int n = 0;
