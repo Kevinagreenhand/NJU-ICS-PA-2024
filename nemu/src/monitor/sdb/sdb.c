@@ -103,6 +103,7 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args){
+//imitate the cmd_help func
          char *arg=strtok(NULL," ");
          int steps=1;
 	 if (arg!=NULL){
