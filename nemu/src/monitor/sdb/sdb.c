@@ -54,6 +54,12 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
+static int cmd_info(char *args);
+
+static int cmd_x(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -95,6 +101,17 @@ static int cmd_help(char *args) {
   }
   return 0;
 }
+
+static int cmd_si(char *args){
+         char *arg=strtok(NULL," ");
+         int steps=1;
+	 if (arg!=NULL){
+                 sscanf(arg,"%d",steps);
+                 if(steps<1){
+                         printf("Error!The integer you give should be larger than 0");
+                         return 0;}}
+         cpu_exec(steps);
+         return 0;}
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;
