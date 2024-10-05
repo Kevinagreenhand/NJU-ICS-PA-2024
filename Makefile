@@ -1,5 +1,10 @@
 STUID = 231098216
 STUNAME = 田博文
+<<<<<<< HEAD
+=======
+
+export TOKEN=fwoQWPF4
+>>>>>>> pa0
 
 # DO NOT modify the following code!!!
 
@@ -18,6 +23,6 @@ _default:
 
 submit:
 	git gc
-	STUID=$(STUID) STUNAME=$(STUNAME) bash -c "$$(curl -s http://why.ink:8080/static/submit.sh)"
+	STUID=$(STUID) STUNAME=$(STUNAME) bash -c "$$(curl -s http://175.24.131.173:8080/static/submit.sh)"
 
 .PHONY: default submit
