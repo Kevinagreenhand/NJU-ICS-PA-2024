@@ -56,9 +56,9 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
-static int cmd_info(char *args);
+//static int cmd_info(char *args);
 
-static int cmd_x(char *args);
+//static int cmd_x(char *args);
 
 static struct {
   const char *name;
@@ -70,11 +70,11 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   /* TODO: Add more commands */
   { "si", "Step into the next instruction, entering functions if necessary", cmd_si },
-  { "info", "Show information about a specific topic", cmd_info },
-  { "x", "Examine memory: x/N EXPR", cmd_x },
-  { "p", "Print the value of an expression: p EXPR", cmd_p },
-  { "w", "Set a watchpoint: w EXPR", cmd_w },
-  { "d", "Delete a watchpoint by number: d N", cmd_d },
+ // { "info", "Show information about a specific topic", cmd_info },
+ // { "x", "Examine memory: x/N EXPR", cmd_x },
+ // { "p", "Print the value of an expression: p EXPR", cmd_p },
+ // { "w", "Set a watchpoint: w EXPR", cmd_w },
+ // { "d", "Delete a watchpoint by number: d N", cmd_d },
 };
 
 #define NR_CMD ARRLEN(cmd_table)
@@ -106,7 +106,7 @@ static int cmd_si(char *args){
          char *arg=strtok(NULL," ");
          int steps=1;
 	 if (arg!=NULL){
-                 sscanf(arg,"%d",steps);
+                 sscanf(arg,"%d",&steps);
                  if(steps<1){
                          printf("Error!The integer you give should be larger than 0");
                          return 0;}}
