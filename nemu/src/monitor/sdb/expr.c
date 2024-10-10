@@ -126,6 +126,54 @@ static bool make_token(char *e) {
   return true;
 }
 
+word_t eval(int p,int q){
+	if (p > q) {
+    /* Bad expression */
+	return false;
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+	if (isdigit(tokens[p])):
+		return isa_reg_str2val
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    op = the position of zhuyunsuanfu  in the token expression;
+    val1 = eval(p, op - 1);
+    val2 = eval(op + 1, q);
+
+    switch (op_type) {
+      case '+': return val1 + val2;
+      case '-': /* ... */
+      case '*': /* ... */
+      case '/': /* ... */
+      default: assert(0);
+    }
+  }
+}
+
+bool checkparentness(p,q){
+	int lftbra=0;
+	if(tokens[p]!='(' || tokens[q]!=')')
+		return false;
+	for(int i=p;i<=q;i++){
+		if(tokens[i]=='(')
+			lftbra++;
+		else if(tokens[i]==')'){
+			lftbra--;
+		if(depth<0)
+			return false;}}
+	return lftbra==0;
+
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -134,7 +182,7 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  
 
   return 0;
 }
