@@ -106,8 +106,8 @@ static bool make_token(char *e) {
 	case 2:
 		strncpy(tknsto.str,substr_start,substr_len);
 		tknsto.str[substr_len]='\0';
-
-          default: 
+    break;
+  default: 
 		tknsto.type=rules[i].token_type;
 		tokens[nr_token]=tknsto;
 		nr_token++;
@@ -164,28 +164,27 @@ word_t eval(int p,int q){
     int tmpop[32];
     int now=0;
     int leftbra=0;
-    int op=0;
+    int op;
     int op_type;
     int val1;
     int val2;
     for (int j=p;j<=q;j++)
     {if ((tokens[j].type=='+'||tokens[p].type=='-'||tokens[p].type=='*'||tokens[p].type=='/')&&leftbra==0)
-	{tmpop[now]=tokens[j].type;
-	now++;}
-     else if (tokens[j].type=='(')
-	     leftbra++;
-     else if (tokens[j].type==')')
-	     leftbra--;}
+	  {tmpop[now]=j;
+	  now++;}
+    else if (tokens[j].type=='(')
+	      leftbra++;
+    else if (tokens[j].type==')')
+	      leftbra--;}
     for (int j=now-1;j>=0;j--){
 	    if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
 		    {op=tmpop[j];
         break;}
-	    if (j==0 && tokens[0].type!='+'&&tokens[0].type!='-')
+	    if (j==0 && tokens[tmpop[0]].type!='+'&&tokens[tmpop[0]].type!='-')
 		    op=tmpop[now-1];}
-    op_type=tokens[op].type;
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
-
+    op_type=tokens[op].type;
     switch (op_type) {
       case 43: return val1 + val2;
       case 45: return val1-val2;
