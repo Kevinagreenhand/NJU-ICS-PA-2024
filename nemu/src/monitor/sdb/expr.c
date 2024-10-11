@@ -136,8 +136,8 @@ word_t eval(int p,int q){
      * For now this token should be a number.
      * Return the value of the number.
      */
-	if (isdigit(tokens[p])):
-		return isa_reg_str2val
+		return strtol(tokens[p].str,NULL,10);
+
   }
   else if (check_parentheses(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
@@ -146,15 +146,30 @@ word_t eval(int p,int q){
     return eval(p + 1, q - 1);
   }
   else {
-    op = the position of zhuyunsuanfu  in the token expression;
+    int tmpop[32];
+    int now=0;
+    int leftbra=0;
+    for (int j=p;j<=q;j++)
+    {if ((tokens[j].type=='+'||tokens[p].type=='-'||tokens[p].type=='*'||tokens[p].type=='/')&&leftbra==0)
+	{tmpop[now]=tokens[j].type;
+	now++;}
+     else if (tokens[j].type=='(')
+	     leftbra++;
+     else if (tokens[j].type==')')
+	     leftbra--;}
+    for (int j=now-1;j>=0;j--){
+	    if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
+		    int op=tmpop[j];
+	    if (j==0 && tokens[0].type!='+'&&tokens[0].type!='-')
+		    int op=tmpop[now-1];}
     val1 = eval(p, op - 1);
     val2 = eval(op + 1, q);
 
     switch (op_type) {
       case '+': return val1 + val2;
-      case '-': /* ... */
-      case '*': /* ... */
-      case '/': /* ... */
+      case '-': return val1-val2;
+      case '*': return val1*val2;
+      case '/': return val1/val2;
       default: assert(0);
     }
   }
@@ -162,7 +177,7 @@ word_t eval(int p,int q){
 
 bool checkparentness(p,q){
 	int lftbra=0;
-	if(tokens[p]!='(' || tokens[q]!=')')
+	if(tokens[p]!=='(' || tokens[q]!=')')
 		return false;
 	for(int i=p;i<=q;i++){
 		if(tokens[i]=='(')
@@ -180,7 +195,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
+  return eval(0,nr_token-1);
   /* TODO: Insert codes to evaluate the expression. */
   
 
