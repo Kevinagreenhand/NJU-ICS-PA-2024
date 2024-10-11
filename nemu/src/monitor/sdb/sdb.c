@@ -61,6 +61,8 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_p(char* args);
+
 static struct {
   const char *name;
   const char *description;
@@ -73,7 +75,7 @@ static struct {
   { "si", "Step into the next instruction, entering functions if necessary", cmd_si },
   { "info", "Show information about a specific topic", cmd_info },
   { "x", "Examine memory: x/N EXPR", cmd_x },
- // { "p", "Print the value of an expression: p EXPR", cmd_p },
+  { "p", "Print the value of an expression: p EXPR", cmd_p },
  // { "w", "Set a watchpoint: w EXPR", cmd_w },
  // { "d", "Delete a watchpoint by number: d N", cmd_d },
 };
@@ -141,6 +143,18 @@ static int cmd_x(char *args){//still some work to do
 	        addr+=4;}
 	printf("%x\n",paddr_read(addr,4));
 	return 0;}
+
+static int cmd_p(char* args){
+    if(args == NULL){
+        printf("No args\n");
+        return 0;
+    }
+    //  printf("args = %s\n", args);
+    bool flag = false;
+    expr(args, &flag);
+    return 0;
+}
+
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;

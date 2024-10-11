@@ -164,10 +164,10 @@ word_t eval(int p,int q){
     int tmpop[32];
     int now=0;
     int leftbra=0;
-    int op;
-    int op_type;
-    int val1;
-    int val2;
+    int op=0;
+    int op_type=0;
+    int val1=0;
+    int val2=0;
     for (int j=p;j<=q;j++)
     {if ((tokens[j].type=='+'||tokens[p].type=='-'||tokens[p].type=='*'||tokens[p].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
