@@ -126,19 +126,21 @@ static bool make_token(char *e) {
   return true;
 }
 
-bool checkparentness(int p,int q){
+int checkparentness(int p,int q){
+  bool rlbraflag=true;
 	int lftbra=0;
 	if(tokens[p].type!='(' || tokens[q].type!=')')
-		return false;
+		rlbraflag=false;
 	for(int i=p;i<=q;i++){
 		if(tokens[i].type=='(')
 			lftbra++;
 		else if(tokens[i].type==')'){
 			lftbra--;
 		if(lftbra<0)
-			return false;}}
-	return lftbra==0;
-
+			return -1;}}
+	if(rlbraflag==true)
+    return 1;
+  return 0;
 }
 
 word_t eval(int p,int q){
@@ -154,13 +156,16 @@ word_t eval(int p,int q){
 		return strtol(tokens[p].str,NULL,10);
 
   }
-  else if (checkparentness(p, q) == true) {
+  int rec=checkparentness(p, q);
+  if (rec==-1) {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
-    return eval(p + 1, q - 1);
+    return false;
+     
   }
-  else {
+  else if(rec==1)
+  return eval(p + 1, q - 1);
     int tmpop[32];
     int now=0;
     int leftbra=0;
@@ -192,7 +197,7 @@ word_t eval(int p,int q){
       case 47: return val1/val2;
       default: assert(0);
     }
-  }
+  
 }
 
 word_t expr(char *e, bool *success) {
