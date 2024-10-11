@@ -99,16 +99,16 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-	TOKEN tknsto;
-        switch (rules[i].token_type) {
+	Token tknsto;
+  switch (rules[i].token_type) {
 	case 256:
 		break;
 	case 2:
 		strncpy(tknsto.str,substr_start,substr_len);
-		tknsto.str[substr_len]='\0'
+		tknsto.str[substr_len]='\0';
 
           default: 
-		tknsto.type=rules[i].token_type
+		tknsto.type=rules[i].token_type;
 		tokens[nr_token]=tknsto;
 		nr_token++;
         }
@@ -126,6 +126,21 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool checkparentness(int p,int q){
+	int lftbra=0;
+	if(tokens[p].type!='(' || tokens[q].type!=')')
+		return false;
+	for(int i=p;i<=q;i++){
+		if(tokens[i].type=='(')
+			lftbra++;
+		else if(tokens[i].type==')'){
+			lftbra--;
+		if(lftbra<0)
+			return false;}}
+	return lftbra==0;
+
+}
+
 word_t eval(int p,int q){
 	if (p > q) {
     /* Bad expression */
@@ -139,7 +154,7 @@ word_t eval(int p,int q){
 		return strtol(tokens[p].str,NULL,10);
 
   }
-  else if (check_parentheses(p, q) == true) {
+  else if (checkparentness(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
@@ -149,6 +164,10 @@ word_t eval(int p,int q){
     int tmpop[32];
     int now=0;
     int leftbra=0;
+    int op=0;
+    int op_type;
+    int val1;
+    int val2;
     for (int j=p;j<=q;j++)
     {if ((tokens[j].type=='+'||tokens[p].type=='-'||tokens[p].type=='*'||tokens[p].type=='/')&&leftbra==0)
 	{tmpop[now]=tokens[j].type;
@@ -159,35 +178,22 @@ word_t eval(int p,int q){
 	     leftbra--;}
     for (int j=now-1;j>=0;j--){
 	    if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
-		    int op=tmpop[j];
+		    {op=tmpop[j];
+        break;}
 	    if (j==0 && tokens[0].type!='+'&&tokens[0].type!='-')
-		    int op=tmpop[now-1];}
+		    op=tmpop[now-1];}
+    op_type=tokens[op].type;
     val1 = eval(p, op - 1);
-    val2 = eval(op + 1, q);
+    val2= eval(op + 1, q);
 
     switch (op_type) {
-      case '+': return val1 + val2;
-      case '-': return val1-val2;
-      case '*': return val1*val2;
-      case '/': return val1/val2;
+      case 43: return val1 + val2;
+      case 45: return val1-val2;
+      case 42: return val1*val2;
+      case 47: return val1/val2;
       default: assert(0);
     }
   }
-}
-
-bool checkparentness(p,q){
-	int lftbra=0;
-	if(tokens[p]!=='(' || tokens[q]!=')')
-		return false;
-	for(int i=p;i<=q;i++){
-		if(tokens[i]=='(')
-			lftbra++;
-		else if(tokens[i]==')'){
-			lftbra--;
-		if(depth<0)
-			return false;}}
-	return lftbra==0;
-
 }
 
 word_t expr(char *e, bool *success) {
