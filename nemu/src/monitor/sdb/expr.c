@@ -116,9 +116,6 @@ static bool make_token(char *e) {
     char *newstart=substr_start+1;
     strncpy(tknsto.str,newstart,substr_len-1);
 		tknsto.str[substr_len-1]='\0';
-    tknsto.type=rules[i].token_type;
-		tokens[nr_token]=tknsto;
-		nr_token++;
   default: 
 		tknsto.type=rules[i].token_type;
 		tokens[nr_token]=tknsto;
