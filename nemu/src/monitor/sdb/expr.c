@@ -174,7 +174,7 @@ word_t eval(int p,int q){
     int val1=0;
     int val2=0;
     for (int j=p;j<=q;j++)
-    {if ((tokens[j].type=='+'||tokens[p].type=='-'||tokens[p].type=='*'||tokens[p].type=='/')&&leftbra==0)
+    {if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
 	  now++;}
     else if (tokens[j].type=='(')
