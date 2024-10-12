@@ -105,9 +105,20 @@ static bool make_token(char *e) {
   switch (rules[i].token_type) {
 	case 256:
 		break;
-	case 2:case 3: case 4:
+	case 2:case 3: 
 		strncpy(tknsto.str,substr_start,substr_len);
 		tknsto.str[substr_len]='\0';
+    tknsto.type=rules[i].token_type;
+		tokens[nr_token]=tknsto;
+		nr_token++;
+    break;
+  case 4:
+    char *newstart=substr_start+1;
+    strncpy(tknsto.str,newstart,substr_len-1);
+		tknsto.str[substr_len]='\0';
+    tknsto.type=rules[i].token_type;
+		tokens[nr_token]=tknsto;
+		nr_token++;
   default: 
 		tknsto.type=rules[i].token_type;
 		tokens[nr_token]=tknsto;
