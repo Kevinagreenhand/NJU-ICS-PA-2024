@@ -182,7 +182,7 @@ word_t eval(int p,int q){
     return eval(p + 1, q - 1);
   if (tokens[p].type=='-')
     return (word_t)(-eval(p+1,q));
-  int tmpop[32];
+  int tmpop[256];
   int now=0;
   int leftbra=0;
   int op=0;
