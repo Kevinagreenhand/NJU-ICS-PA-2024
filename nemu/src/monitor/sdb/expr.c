@@ -152,7 +152,8 @@ word_t eval(int p,int q){
      * For now this token should be a number.
      * Return the value of the number.
      */
-		return strtol(tokens[p].str,NULL,10);
+    word_t rec=strtol(tokens[p].str,NULL,10);
+		return rec;
 
   }
   int rec=checkparentness(p, q,true);
@@ -170,8 +171,8 @@ word_t eval(int p,int q){
   int leftbra=0;
   int op=0;
   int op_type=0;
-  int val1=0;
-  int val2=0;
+  word_t val1=0;
+  word_t val2=0;
   for (int j=p;j<=q;j++)
     {if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
