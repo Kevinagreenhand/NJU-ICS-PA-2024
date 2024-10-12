@@ -188,8 +188,7 @@ word_t eval(int p,int q){
         break;}
 	    if (j==0)
 		    op=tmpop[now-1];}
-    char gaga=op_type;
-    printf("%d\n",gaga);
+    printf("%d\n",op_type);
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
     op_type=tokens[op].type;
