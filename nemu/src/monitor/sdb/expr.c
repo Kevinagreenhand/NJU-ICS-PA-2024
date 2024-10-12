@@ -166,7 +166,6 @@ word_t eval(int p,int q){
   }
   else if(rec==1)
   return eval(p + 1, q - 1);
-    printf("haha\n");
     int tmpop[32];
     int now=0;
     int leftbra=0;
@@ -189,8 +188,8 @@ word_t eval(int p,int q){
 	    if (j==0)
 		    op=tmpop[now-1];}
     val1 = eval(p, op - 1);
-    printf("%d",val1);
     val2= eval(op + 1, q);
+    printf("%d  %d\n",val1,val2);
     op_type=tokens[op].type;
     switch (op_type) {
       case 43: return val1 + val2;
