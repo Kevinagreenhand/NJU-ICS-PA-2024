@@ -187,6 +187,7 @@ word_t eval(int p,int q){
         break;}
 	    if (j==0)
 		    op=tmpop[now-1];}
+    printf("%d teh op integer\n",op);
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
     printf("%d  %d\n",val1,val2);
