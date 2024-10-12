@@ -136,9 +136,9 @@ int checkparentness(int p,int q,bool jud){
 			return -1;}}
   if (lftbra>0)
     return -1;
-  if (jud==false)
+  if (jud==false || tokens[p].type!='(' || tokens[q].type!=')')
     return 0;
-  else
+  else 
     return checkparentness(p+1,q-1,false)+1;
 }
 
