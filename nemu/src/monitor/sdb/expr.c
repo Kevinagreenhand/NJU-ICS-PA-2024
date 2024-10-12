@@ -165,6 +165,7 @@ word_t eval(int p,int q){
      
   }
   else if(rec==1)
+  printf("haha\n");
   return eval(p + 1, q - 1);
     int tmpop[32];
     int now=0;
