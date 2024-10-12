@@ -188,10 +188,10 @@ word_t eval(int p,int q){
         break;}
 	    if (j==0)
 		    op=tmpop[now-1];}
-    printf("999");
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
     op_type=tokens[op].type;
+    printf("%d",op_type);
     switch (op_type) {
       case 43: return val1 + val2;
       case 45: return val1-val2;
