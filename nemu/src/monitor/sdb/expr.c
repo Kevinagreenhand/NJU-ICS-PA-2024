@@ -125,11 +125,8 @@ static bool make_token(char *e) {
   return true;
 }
 
-int checkparentness(int p,int q){
-  bool rlbraflag=false;
+int checkparentness(int p,int q,bool jud){
 	int lftbra=0;
-	if((tokens[p].type=='(' || tokens[q].type==')')&&checkparentness(p+1,q-1)>-1)
-		rlbraflag=true;
 	for(int i=p;i<=q;i++){
 		if(tokens[i].type=='(')
 			lftbra++;
@@ -137,9 +134,12 @@ int checkparentness(int p,int q){
 			lftbra--;
 		if(lftbra<0)
 			return -1;}}
-	if(rlbraflag==true)
-    return 1;
-  return 0;
+  if (lftbra>0)
+    return -1;
+  if (jud==false)
+    return 0;
+  else
+    return checkparentness(p+1,q-1,false)+1;
 }
 
 word_t eval(int p,int q){
@@ -156,7 +156,7 @@ word_t eval(int p,int q){
 		return tmptmp;
 
   }
-  int rec=checkparentness(p, q);
+  int rec=checkparentness(p, q,true);
   if (rec==-1) {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
@@ -165,28 +165,28 @@ word_t eval(int p,int q){
      
   }
   else if(rec==1)
-  return eval(p + 1, q - 1);
-    int tmpop[32];
-    int now=0;
-    int leftbra=0;
-    int op=0;
-    int op_type=0;
-    int val1=0;
-    int val2=0;
-    for (int j=p;j<=q;j++)
+    return eval(p + 1, q - 1);
+  int tmpop[32];
+  int now=0;
+  int leftbra=0;
+  int op=0;
+  int op_type=0;
+  int val1=0;
+  int val2=0;
+  for (int j=p;j<=q;j++)
     {if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
 	  now++;}
     else if (tokens[j].type=='(')
-	      leftbra++;
+	    leftbra++;
     else if (tokens[j].type==')')
-	      leftbra--;}
-    for (int j=now-1;j>=0;j--){
-	    if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
-		    {op=tmpop[j];
-        break;}
-	    if (j==0)
-		    op=tmpop[now-1];}
+	    leftbra--;}
+  for (int j=now-1;j>=0;j--){
+	  if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
+		  {op=tmpop[j];
+      break;}
+	  if (j==0)
+		  op=tmpop[now-1];}
     printf("%d teh op integer\n",op);
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
