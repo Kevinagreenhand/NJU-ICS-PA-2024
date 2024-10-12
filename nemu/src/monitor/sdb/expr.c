@@ -188,7 +188,7 @@ word_t eval(int p,int q){
         break;}
 	    if (j==0)
 		    op=tmpop[now-1];}
-    printf("%d\n",op_type);
+    printf("999");
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
     op_type=tokens[op].type;
@@ -207,7 +207,6 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  printf("%d",nr_token);
   int rec=eval(0,nr_token-1);
   return rec;//changed
   /* TODO: Insert codes to evaluate the expression. */
