@@ -208,6 +208,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  printf("%d",nr_token);
   int rec=eval(0,nr_token-1);
   return rec;//changed
   /* TODO: Insert codes to evaluate the expression. */
