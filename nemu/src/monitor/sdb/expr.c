@@ -189,6 +189,7 @@ word_t eval(int p,int q){
 	    if (j==0)
 		    op=tmpop[now-1];}
     val1 = eval(p, op - 1);
+    printf("%d",val1);
     val2= eval(op + 1, q);
     op_type=tokens[op].type;
     switch (op_type) {
