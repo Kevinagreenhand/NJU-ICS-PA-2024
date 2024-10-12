@@ -191,7 +191,6 @@ word_t eval(int p,int q){
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
     op_type=tokens[op].type;
-    printf("%d",op_type);
     switch (op_type) {
       case 43: return val1 + val2;
       case 45: return val1-val2;
@@ -208,6 +207,7 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
   int rec=eval(0,nr_token-1);
+  printf("%d",rec);
   return rec;//changed
   /* TODO: Insert codes to evaluate the expression. */
   
