@@ -150,7 +150,7 @@ static int cmd_p(char* args){
         printf("No args\n");
         return 0;
     }
-      printf("args = %s\n", args);//can be deleted
+    //printf("args = %s\n", args);
     bool flag = false;
     expr(args, &flag);
     return 0;

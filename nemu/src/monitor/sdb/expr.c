@@ -152,8 +152,7 @@ word_t eval(int p,int q){
      * For now this token should be a number.
      * Return the value of the number.
      */
-    int tmptmp=strtol(tokens[p].str,NULL,10);
-		return tmptmp;
+		return strtol(tokens[p].str,NULL,10);
 
   }
   int rec=checkparentness(p, q,true);
@@ -187,10 +186,8 @@ word_t eval(int p,int q){
       break;}
 	  if (j==0)
 		  op=tmpop[now-1];}
-    printf("%d teh op integer\n",op);
     val1 = eval(p, op - 1);
     val2= eval(op + 1, q);
-    printf("%d  %d\n",val1,val2);
     op_type=tokens[op].type;
     switch (op_type) {
       case 43: return val1 + val2;
@@ -208,7 +205,6 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
   int rec=eval(0,nr_token-1);
-  printf("%d",rec);
   return rec;//changed
   /* TODO: Insert codes to evaluate the expression. */
   
