@@ -152,8 +152,7 @@ word_t eval(int p,int q){
      * For now this token should be a number.
      * Return the value of the number.
      */
-    word_t rec=strtol(tokens[p].str,NULL,10);
-		return rec;
+		return (word_t) strtol(tokens[p].str,NULL,10);
 
   }
   int rec=checkparentness(p, q,true);
