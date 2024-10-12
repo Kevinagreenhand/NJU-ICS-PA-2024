@@ -75,7 +75,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[256] __attribute__((used)) = {};
+static Token tokens[512] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -182,7 +182,7 @@ word_t eval(int p,int q){
     return eval(p + 1, q - 1);
   if (tokens[p].type=='-')
     return (word_t)(-eval(p+1,q));
-  int tmpop[256];
+  int tmpop[512];
   int now=0;
   int leftbra=0;
   int op=0;
