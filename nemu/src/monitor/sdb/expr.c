@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ=1,TK_NUM=2
+  TK_NOTYPE = 256, TK_EQ=1,TK_NUM=2,TK_HEX=3,TK_REG=4
 
   /* TODO: Add more token types */
 
@@ -44,7 +44,9 @@ static struct rule {
   {"/",'/'},
   {"\\(",'('},
   {"\\)",')'},
+  {"0[xX][0-9a-fA-F]+",TK_HEX},
   {"\\b[0-9]+\\b",TK_NUM},
+  {"\\$(\\$0|ra|[sgt]p|t[0-6]|a[0-7]|s([0-9]|1[0-1]))", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -103,7 +105,7 @@ static bool make_token(char *e) {
   switch (rules[i].token_type) {
 	case 256:
 		break;
-	case 2:
+	case 2:case 3: case 4:
 		strncpy(tknsto.str,substr_start,substr_len);
 		tknsto.str[substr_len]='\0';
   default: 
@@ -152,8 +154,13 @@ word_t eval(int p,int q){
      * For now this token should be a number.
      * Return the value of the number.
      */
-		return (word_t) strtol(tokens[p].str,NULL,10);
-
+    bool flag=false;
+    if (tokens[p].type==2)
+		  return (word_t) strtol(tokens[p].str,NULL,10);
+    else if (tokens[p].type==3)
+      return (word_t) strtol(tokens[p].str,NULL,16);
+    else if (tokens[p].type==4)
+      return isa_reg_str2val(tokens[p].str,&flag);
   }
   int rec=checkparentness(p, q,true);
   if (rec==-1) {
