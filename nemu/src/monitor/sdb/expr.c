@@ -126,10 +126,10 @@ static bool make_token(char *e) {
 }
 
 int checkparentness(int p,int q){
-  bool rlbraflag=true;
+  bool rlbraflag=false;
 	int lftbra=0;
-	if(tokens[p].type!='(' || tokens[q].type!=')')
-		rlbraflag=false;
+	if((tokens[p].type=='(' || tokens[q].type==')')&&checkparentness(p+1,q-1)>-1)
+		rlbraflag=true;
 	for(int i=p;i<=q;i++){
 		if(tokens[i].type=='(')
 			lftbra++;
