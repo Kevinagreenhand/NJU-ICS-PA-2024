@@ -206,9 +206,9 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  int reg=eval(0,nr_token-1);
-  printf("%u",reg);
-  return reg;//changed
+  int rec=eval(0,nr_token-1);
+  printf("%u",rec);
+  return rec;//changed
   /* TODO: Insert codes to evaluate the expression. */
   
 
