@@ -180,11 +180,6 @@ word_t eval(int p,int q){
   }
   else if(rec==1)
     return eval(p + 1, q - 1);
-  if (tokens[p].type==5)
-    {word_t shit=(word_t)(-eval(p+1,q));
-    printf("%u\n",shit);
-    return shit;
-    }
   int tmpop[512];
   int now=0;
   int leftbra=0;
