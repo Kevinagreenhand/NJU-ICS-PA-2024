@@ -196,6 +196,7 @@ word_t eval(int p,int q){
     {if(tokens[j].type=='-'&&(j==p||tokens[j-1].type=='+'||tokens[j-1].type=='-'||
     tokens[j-1].type=='*'||tokens[j-1].type=='/'||tokens[j-1].type=='(')){
       tokens[j].type=5;
+      printf("hahaha\n");
     }
     if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
