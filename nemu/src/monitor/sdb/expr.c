@@ -204,6 +204,8 @@ word_t eval(int p,int q){
 	    leftbra++;
     else if (tokens[j].type==')')
 	    leftbra--;}
+  if (now==0&&tokens[p].type==5)
+    return (word_t)(-eval(p+1,q));
   for (int j=now-1;j>=0;j--){
 	  if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
 		  {op=tmpop[j];
