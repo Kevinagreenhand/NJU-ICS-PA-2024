@@ -189,9 +189,8 @@ word_t eval(int p,int q){
   word_t val2=0;
   for (int j=p;j<=q;j++)
     {if(tokens[j].type=='-'&&(j==p||tokens[j-1].type=='+'||tokens[j-1].type=='-'||
-    tokens[j-1].type=='*'||tokens[j-1].type=='/'||tokens[j-1].type=='(')){
+    tokens[j-1].type=='*'||tokens[j-1].type=='/'||tokens[j-1].type=='('||tokens[j-1].type==5)){
       tokens[j].type=5;
-      printf("hahaha\n");
     }
     if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
