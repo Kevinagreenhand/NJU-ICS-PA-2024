@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ=1,TK_NUM=2,TK_HEX=3,TK_REG=4
+  TK_NOTYPE = 256, TK_EQ=1,TK_NUM=2,TK_HEX=3,TK_REG=4,TK_NEG=5  
 
   /* TODO: Add more token types */
 
@@ -180,7 +180,7 @@ word_t eval(int p,int q){
   }
   else if(rec==1)
     return eval(p + 1, q - 1);
-  if (tokens[p].type=='-')
+  if (tokens[p].type==5)
     return (word_t)(-eval(p+1,q));
   int tmpop[512];
   int now=0;
@@ -190,7 +190,11 @@ word_t eval(int p,int q){
   word_t val1=0;
   word_t val2=0;
   for (int j=p;j<=q;j++)
-    {if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
+    {if(tokens[j].type=='-'&&(j==p||tokens[j-1].type=='+'||tokens[j-1].type=='-'||
+    tokens[j-1].type=='*'||tokens[j-1].type=='/'||tokens[j-1].type=='(')){
+      tokens[j].type=5;
+    }
+    if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
 	  {tmpop[now]=j;
 	  now++;}
     else if (tokens[j].type=='(')
