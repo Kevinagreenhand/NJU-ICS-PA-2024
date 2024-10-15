@@ -137,7 +137,7 @@ static int cmd_x(char *args){//still some work to do
 	int n = 0;
 	paddr_t addr=0;
 	sscanf(N, "%d", &n);
-  	sscanf(expr,"%x", &addr);
+  sscanf(expr,"%x", &addr);
 	printf("%x : ",addr);
 	for (int i=1;i<n;i++){
 		printf("%x ",paddr_read(addr,4));
