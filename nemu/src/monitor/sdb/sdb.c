@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include "memory/paddr.h"//this is teh one I add
 
 static int is_batch_mode = false;
 
@@ -49,10 +50,19 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
 static int cmd_help(char *args);
+
+static int cmd_si(char *args);
+
+static int cmd_info(char *args);
+
+static int cmd_x(char *args);
+
+static int cmd_p(char* args);
 
 static struct {
   const char *name;
@@ -62,9 +72,13 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
   /* TODO: Add more commands */
-
+  { "si", "Step into the next instruction, entering functions if necessary", cmd_si },
+  { "info", "Show information about a specific topic", cmd_info },
+  { "x", "Examine memory: x/N EXPR", cmd_x },
+  { "p", "Print the value of an expression: p EXPR", cmd_p },
+ // { "w", "Set a watchpoint: w EXPR", cmd_w },
+ // { "d", "Delete a watchpoint by number: d N", cmd_d },
 };
 
 #define NR_CMD ARRLEN(cmd_table)
@@ -91,6 +105,58 @@ static int cmd_help(char *args) {
   }
   return 0;
 }
+
+static int cmd_si(char *args){
+//imitate the cmd_help func
+         char *arg=strtok(NULL," ");
+         int steps=1;
+	 if (arg!=NULL){
+                 sscanf(arg,"%d",&steps);
+                 if(steps<1){
+                         printf("Error!The integer you give should be larger than 0\n");
+                         return 0;}}
+         cpu_exec(steps);
+         return 0;}
+
+static int cmd_info(char *args){
+	char *arg=strtok(NULL," ");
+	if (arg==NULL)
+		printf("Error.No input is catched.\n");
+	else if (strcmp(arg,"r")==0)
+		isa_reg_display();
+	else if (strcmp("w",arg)==0)
+		printf("To be realized\n");
+	else
+		printf("Error!No command like this.\n");
+	return 0;
+}	
+
+static int cmd_x(char *args){//still some work to do
+	char *N=strtok(NULL," ");
+	char *expr=strtok(NULL," ");
+	int n = 0;
+	paddr_t addr=0;
+	sscanf(N, "%d", &n);
+  sscanf(expr,"%x", &addr);
+	printf("%x : ",addr);
+	for (int i=1;i<n;i++){
+		printf("%x ",paddr_read(addr,4));
+	        addr+=4;}
+	printf("%x\n",paddr_read(addr,4));
+	return 0;}
+
+static int cmd_p(char* args){
+    if(args == NULL){
+        printf("No args\n");
+        return 0;
+    }
+    //printf("args = %s\n", args);
+    bool flag = false;
+    word_t rec=expr(args, &flag);
+    printf("%u\n",rec);
+    return 0;
+}
+
 
 void sdb_set_batch_mode() {
   is_batch_mode = true;

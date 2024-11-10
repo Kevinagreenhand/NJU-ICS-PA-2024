@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ=1,TK_NUM=2,TK_HEX=3,TK_REG=4,TK_NEG=5  
 
   /* TODO: Add more token types */
 
@@ -39,6 +39,14 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"-",'-'},
+  {"\\*",'*'},
+  {"/",'/'},
+  {"\\(",'('},
+  {"\\)",')'},
+  {"0[xX][0-9a-fA-F]+",TK_HEX},
+  {"\\b[0-9]+\\b",TK_NUM},
+  {"\\$(\\$0|ra|[sgt]p|t[0-6]|a[0-7]|s([0-9]|1[0-1]))", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -67,7 +75,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[512] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -93,9 +101,25 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
-        switch (rules[i].token_type) {
-          default: TODO();
+	Token tknsto;
+  switch (rules[i].token_type) {
+	case 256:
+		break;
+	case 2:case 3: 
+		strncpy(tknsto.str,substr_start,substr_len);
+		tknsto.str[substr_len]='\0';
+    tknsto.type=rules[i].token_type;
+		tokens[nr_token]=tknsto;
+		nr_token++;
+    break;
+  case 4:
+    char *newstart=substr_start+1;
+    strncpy(tknsto.str,newstart,substr_len-1);
+		tknsto.str[substr_len-1]='\0';
+  default: 
+		tknsto.type=rules[i].token_type;
+		tokens[nr_token]=tknsto;
+		nr_token++;
         }
 
         break;
@@ -111,15 +135,99 @@ static bool make_token(char *e) {
   return true;
 }
 
+int checkparentness(int p,int q,bool jud){
+	int lftbra=0;
+	for(int i=p;i<=q;i++){
+		if(tokens[i].type=='(')
+			lftbra++;
+		else if(tokens[i].type==')'){
+			lftbra--;
+		if(lftbra<0)
+			return -1;}}
+  if (lftbra>0)
+    return -1;
+  if (jud==false || tokens[p].type!='(' || tokens[q].type!=')')
+    return 0;
+  else 
+    return checkparentness(p+1,q-1,false)+1;
+}
+
+word_t eval(int p,int q){
+	if (p > q) {
+    /* Bad expression */
+	return false;
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    bool flag=false;
+    if (tokens[p].type==2)
+		  return (word_t) strtol(tokens[p].str,NULL,10);
+    else if (tokens[p].type==3)
+      return (word_t) strtol(tokens[p].str,NULL,16);
+    else if (tokens[p].type==4)
+      return isa_reg_str2val(tokens[p].str,&flag);
+  }
+  int rec=checkparentness(p, q,true);
+  if (rec==-1) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return false;
+     
+  }
+  else if(rec==1)
+    return eval(p + 1, q - 1);
+  int tmpop[512];
+  int now=0;
+  int leftbra=0;
+  int op=0;
+  int op_type=0;
+  word_t val1=0;
+  word_t val2=0;
+  for (int j=p;j<=q;j++)
+    {if(tokens[j].type=='-'&&(j==p||tokens[j-1].type=='+'||tokens[j-1].type=='-'||
+    tokens[j-1].type=='*'||tokens[j-1].type=='/'||tokens[j-1].type=='('||tokens[j-1].type==5)){
+      tokens[j].type=5;
+    }
+    if ((tokens[j].type=='+'||tokens[j].type=='-'||tokens[j].type=='*'||tokens[j].type=='/')&&leftbra==0)
+	  {tmpop[now]=j;
+	  now++;}
+    else if (tokens[j].type=='(')
+	    leftbra++;
+    else if (tokens[j].type==')')
+	    leftbra--;}
+  if (now==0&&tokens[p].type==5)
+    return (word_t)(-eval(p+1,q));
+  for (int j=now-1;j>=0;j--){
+	  if (tokens[tmpop[j]].type=='+'||tokens[tmpop[j]].type=='-')
+		  {op=tmpop[j];
+      break;}
+	  if (j==0)
+		  op=tmpop[now-1];}
+    val1 = eval(p, op - 1);
+    val2= eval(op + 1, q);
+    op_type=tokens[op].type;
+    switch (op_type) {
+      case 43: return val1 + val2;
+      case 45: return val1-val2;
+      case 42: return val1*val2;
+      case 47: return val1/val2;
+      default: assert(0);
+    }
+  
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
-
+  return eval(0,nr_token-1);//changed
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  
 
   return 0;
 }
