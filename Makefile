@@ -1,10 +1,7 @@
 STUID = 231098216
 STUNAME = 田博文
-<<<<<<< HEAD
-=======
 
 export TOKEN=fwoQWPF4
->>>>>>> pa0
 
 # DO NOT modify the following code!!!
 
