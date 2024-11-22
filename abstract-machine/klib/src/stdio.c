@@ -56,6 +56,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           sreceive++;
         }
       }
+      else if(*fmt=='c'){
+        *tmp=(unsigned char)va_arg(ap,int);
+        tmp++;
+      }
       else{
         *tmp='%';
         tmp++;
