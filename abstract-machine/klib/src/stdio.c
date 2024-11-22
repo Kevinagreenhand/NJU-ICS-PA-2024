@@ -49,6 +49,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           sreceive++;
         }
       }
+      else{
+        *tmp='%';
+        tmp++;
+        *tmp=*fmt;
+        tmp++;
+      }
     }
     fmt++;
   }
