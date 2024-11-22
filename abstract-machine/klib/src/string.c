@@ -40,19 +40,21 @@ char *strcat(char *dst, const char *src) {
 }
 
 int strcmp(const char *s1, const char *s2) {
-    while(*s1!='\0' && *s2!='\0'){
-    if(*s1!=*s2){
-      if (*s1>*s2)
+  char *tmp1=(char *)s1;
+  char *tmp2=(char *)s2;
+    while(*tmp1!='\0' && *tmp2!='\0'){
+    if(*tmp1!=*tmp2){
+      if (*tmp1>*tmp2)
         return 1;
       else
         return -1;
     }
-    s1++;
-    s2++;
+    tmp1++;
+    tmp2++;
   }
-  if(*s1=='\0'&&*s2=='\0')
+  if(*tmp1=='\0'&&*tmp2=='\0')
     return 0;
-  if(*s1=='\0')
+  if(*tmp1=='\0')
     return -1;
   else
     return 1;
@@ -86,6 +88,7 @@ int memcmp(const void *s1, const void *s2, size_t n) {
     }
     str1++;
     str2++;
+    n--;
   }
   return 0;
   panic("Not implemented");
