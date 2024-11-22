@@ -10,11 +10,58 @@ int printf(const char *fmt, ...) {
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  panic("Not implemented");
+  char* tmp=out;
+  char* sreceive=NULL;
+  int base=10;
+  int num=0;
+  while(*fmt!='\0'){
+    if(*fmt!='%'){
+      *tmp=*fmt;
+      tmp++;
+    }
+    else{
+      fmt++;
+      if(*fmt=='d'){
+        num=va_arg(ap,int);
+        int numsto[128];
+        if(num<0){
+          num=-num;
+          *tmp='-';
+          tmp++;
+        }
+        int count=0;
+        while(num!=0){
+          numsto[count]=num%base;
+          count++;
+          num=num/10;
+        }
+        while(count!=0){
+          *tmp=(char)(numsto[count-1]+'0');
+          tmp++;
+          count--;
+        }
+      }
+      else if(*fmt=='s'){
+        sreceive=va_arg(ap,char*);
+        while(*sreceive!='\0'){
+          *tmp=*sreceive;
+          tmp++;
+          sreceive++;
+        }
+      }
+    }
+  }
+  *tmp='\0';
+  return tmp-out;
 }
 
 int sprintf(char *out, const char *fmt, ...) {
-  panic("Not implemented");
+  va_list arglst;
+  int receive=0;
+  va_start(arglst,fmt);
+  receive=vsprintf(out,fmt,arglst);
+  va_end(arglst);
+  return receive;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {

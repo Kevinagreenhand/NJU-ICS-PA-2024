@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
-
+//所有未定义情况我都没有处理，因为这样的情况太多太复杂
 size_t strlen(const char *s) {
   size_t result=0;
   while(*s!='\0'){
