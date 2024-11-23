@@ -37,11 +37,11 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           tmp++;
         }
         int count=0;
-        while(num!=0){
+        do{
           numsto[count]=num%base;
           count++;
           num=num/10;
-        }
+        }while(num!=0);
         while(count!=0){
           *tmp=(char)(numsto[count-1]+'0');
           tmp++;
