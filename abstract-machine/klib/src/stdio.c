@@ -57,6 +57,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         }
       }
       else if(*fmt=='c'){
+        //只是因为测试文件里有'c'选项，为了检验效果，所以针对这个加上
         *tmp=(unsigned char)va_arg(ap,int);
         tmp++;
       }

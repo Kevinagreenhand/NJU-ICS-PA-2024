@@ -4,8 +4,8 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 static unsigned long int next = 1;
-static char* start_addr;    // addr的初始值
-static bool init_flag = 0;  // 初始化的标志, 初始化完成后置1
+static char* startaddr;   
+static bool initjud = false;  
 int rand(void) {
   // RAND_MAX assumed to be 32767
   next = next * 1103515245 + 12345;
@@ -31,14 +31,13 @@ int atoi(const char* nptr) {
 }
 
 void *malloc(size_t size) {
-if(!init_flag) {
-        start_addr = (void*)ROUNDUP(heap.start, 8);
-        init_flag = true;
+if(!initjud) {
+        startaddr = (void*)ROUNDUP(heap.start, 8);
+        initjud = true;
     }
-    size = (size_t)ROUNDUP(size, 8);
-    char* old = start_addr; // 获取addr
-    start_addr += size;
-    return old; // [addr, addr + size]
+    char* result = startaddr; 
+    startaddr += (size_t)ROUNDUP(size, 8);
+    return result; 
 }
 
 
