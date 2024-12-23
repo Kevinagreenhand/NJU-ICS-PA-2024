@@ -19,8 +19,7 @@ Context* __am_irq_handle(Context *c) {
 }
 
 extern void __am_asm_trap(void);
-void __am_asm_trap(void)
-{printf("%d",999);}
+
 bool cte_init(Context*(*handler)(Event, Context*)) {
   // initialize exception entry
   asm volatile("csrw mtvec, %0" : : "r"(__am_asm_trap));
