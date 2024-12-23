@@ -7,7 +7,7 @@
 
 int printf(const char *fmt, ...) {
   int result=0;
-  char outbuf[512];
+  char outbuf[8192];
   va_list argslst;
   va_start(argslst, fmt);
   result = vsprintf(outbuf, fmt, argslst);
