@@ -73,11 +73,21 @@ static uint32_t *choose_a_csr(uint32_t imm){
   else
     return NULL;
 }
-static uint32_t ecall_implemention(uint32_t ini_dnpc,uint32_t pc){
+static uint32_t ecall_implemention(uint32_t pc){
   bool success;
   uint32_t new_dnpc=(isa_raise_intr(isa_reg_str2val("a7", &success), pc));
   return new_dnpc;
 
+}
+static uint32_t mret_implemention(){
+  uint32_t tmp=0;
+  cpu.csrs.mstatus=cpu.csrs.mstatus&(~((1<<11)+(1<<12)));
+  tmp=(cpu.csrs.mstatus&(1<<7))>>7;
+  if(tmp==1)
+    cpu.csrs.mstatus=(((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))|(tmp<<3))|(1<<7);
+  else
+    cpu.csrs.mstatus=(((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))&(~(1<<3)))|(1<<7);  
+  return cpu.csrs.mepc;
 }
 
 static int decode_exec(Decode *s) {
@@ -171,7 +181,8 @@ static int decode_exec(Decode *s) {
   //for csrs
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) = src1);
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->dnpc,s->pc));
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->pc));
+  INSTPAT("0011000 00010 00000 000 00000 11100 11",mret,R,s->dnpc=mret_implemention());
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();
 
