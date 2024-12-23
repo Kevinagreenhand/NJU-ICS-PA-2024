@@ -61,34 +61,25 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
   }
 }
 //newly added
-//static uint32_t *choose_a_csr(uint32_t imm){
-  //if(imm==0x300)
-    //return &(cpu.csrs.mstatus);
-  //else if(imm==0x305)
-    //return  &(cpu.csrs.mtvec);
-  //else if(imm==0x341)
-    //return &(cpu.csrs.mepc);
-  //else if(imm==0x342)
-    //return &(cpu.csrs.mcause);
-  //else
-    //panic("unsupported imm = %d", imm);
-//}
-//static uint32_t ecall_implemention(uint32_t ini_dnpc,uint32_t pc){
-  //bool success;
-  //uint32_t new_dnpc=(isa_raise_intr(isa_reg_str2val("a7", &success), pc));
-  //return new_dnpc;
-
-//}
-static word_t *csr_reg(word_t imm) {
-  switch (imm) {
-    case 0x300 :  return &(cpu.csrs.mstatus);
-    case 0x305 :  return &(cpu.csrs.mtvec);
-    case 0x341 :  return &(cpu.csrs.mepc);
-    case 0x342 :  return &(cpu.csrs.mcause);
-    default : Log("csr error");
-  }
-  return NULL;
+static uint32_t *choose_a_csr(uint32_t imm){
+  if(imm==0x300)
+    return &(cpu.csrs.mstatus);
+  else if(imm==0x305)
+    return  &(cpu.csrs.mtvec);
+  else if(imm==0x341)
+    return &(cpu.csrs.mepc);
+  else if(imm==0x342)
+    return &(cpu.csrs.mcause);
+  else
+    return NULL;
 }
+static uint32_t ecall_implemention(uint32_t ini_dnpc,uint32_t pc){
+  bool success;
+  uint32_t new_dnpc=(isa_raise_intr(isa_reg_str2val("a7", &success), pc));
+  return new_dnpc;
+
+}
+
 static int decode_exec(Decode *s) {
   s->dnpc = s->snpc;
 
@@ -174,16 +165,14 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 000 ????? 00000 11", lb     , I, R(rd) = (int8_t)Mr(src1 + imm, 1));
   //litenes
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", slti   , I, R(rd) = (int32_t)src1 < (int32_t)imm ? 1: 0);
-  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = CSR(imm); CSR(imm) |= src1);
-  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, ECALL(s->dnpc));
-  INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
+
+  
 
   //for csrs
-  //INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) = src1);
-  //INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
-  //INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->dnpc,s->pc));
-
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) = src1);
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->dnpc,s->pc));
+  INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();
 
   R(0) = 0; // reset $zero to 0

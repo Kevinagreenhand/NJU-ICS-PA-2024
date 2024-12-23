@@ -22,17 +22,13 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
   cpu.csrs.mcause = NO;
   cpu.csrs.mepc = epc;
-  //cpu.csrs.mstatus=cpu.csrs.mstatus|((1<<11)+(1<<12));
-  //uint32_t tmp=0;
-  //tmp=(cpu.csrs.mstatus&(1<<3))>>3;
-  //if(tmp==1)
-    //cpu.csrs.mstatus=((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))|(tmp<<7);
-  //else
-    //cpu.csrs.mstatus=((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))&(~(1<<7));
-  cpu.csrs.mstatus &= ~(1<<7);
-  cpu.csrs.mstatus |= ((cpu.csrs.mstatus&(1<<3))<<4);
-  cpu.csrs.mstatus &= ~(1<<3);
-  cpu.csrs.mstatus |= ((1<<11)+(1<<12));
+  cpu.csrs.mstatus=cpu.csrs.mstatus|((1<<11)+(1<<12));
+  uint32_t tmp=0;
+  tmp=(cpu.csrs.mstatus&(1<<3))>>3;
+  if(tmp==1)
+    cpu.csrs.mstatus=((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))|(tmp<<7);
+  else
+    cpu.csrs.mstatus=((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))&(~(1<<7));
   return cpu.csrs.mtvec;
 }
 
