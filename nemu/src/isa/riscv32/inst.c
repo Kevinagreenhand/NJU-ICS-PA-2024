@@ -60,7 +60,25 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
     default: panic("unsupported type = %d", type);
   }
 }
+//newly added
+static uint32_t* choose_a_csr(uint32_t imm){
+  if(imm==0x300)
+    return &(cpu.csrs.mstatus);
+  else if(imm==0x305)
+    return  &(cpu.csrs.mtvec);
+  else if(imm==0x341)
+    return &(cpu.csrs.mepc);
+  else if(imm==0x342)
+    return &(cpu.csrs.mcause);
+  else
+    return NULL;
+}
+static uint32_t ecall_implemention(uint32_t ini_dnpc,uint32_t pc){
+  bool success;
+  uint32_t new_dnpc=(isa_raise_intr(isa_reg_str2val("a7", &success), pc));
+  return new_dnpc;
 
+}
 static int decode_exec(Decode *s) {
   s->dnpc = s->snpc;
 
@@ -71,6 +89,8 @@ static int decode_exec(Decode *s) {
   decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type)); \
   __VA_ARGS__ ; \
 }
+//newly added
+
 
   INSTPAT_START();
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(rd) = s->pc + imm);
@@ -143,6 +163,10 @@ static int decode_exec(Decode *s) {
   //litenes
   INSTPAT("??????? ????? ????? 010 ????? 00100 11", slti   , I, R(rd) = (int32_t)src1 < (int32_t)imm ? 1: 0);
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
+  //for csrs
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) = src1);
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, s->dnpc=ecall_implemention(s->dnpc,s->pc));
   INSTPAT_END();
 
   R(0) = 0; // reset $zero to 0
