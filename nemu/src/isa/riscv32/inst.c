@@ -166,7 +166,7 @@ static int decode_exec(Decode *s) {
   //for csrs
   INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) = src1);
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
-  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, s->dnpc=ecall_implemention(s->dnpc,s->pc));
+  INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->dnpc,s->pc));
   INSTPAT_END();
 
   R(0) = 0; // reset $zero to 0
