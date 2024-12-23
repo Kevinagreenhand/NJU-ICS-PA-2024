@@ -62,6 +62,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
 }
 //newly added
 static uint32_t *choose_a_csr(uint32_t imm){
+  printf("csr_imm=%x\n",imm);
   if(imm==0x300)
     return &(cpu.csrs.mstatus);
   else if(imm==0x305)
