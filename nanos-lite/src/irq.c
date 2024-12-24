@@ -2,7 +2,8 @@
 
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
-    case EVENT_YIELD : Log("yield can be recognized!"); c->mepc += 4; break;
+    case EVENT_YIELD : Log("yield can be recognized!"); break;
+    case EVENT_SYSCALL : Log("syscall can be recognized!");break;
     default: panic("Unhandled event ID = %d", e.event);
   }
 

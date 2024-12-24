@@ -5,7 +5,7 @@
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
-
+//to enable naive_load to be recognized
 extern void naive_uload(PCB *pcb, const char *filename);
 void switch_boot_pcb() {
   current = &pcb_boot;

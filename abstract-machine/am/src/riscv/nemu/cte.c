@@ -7,10 +7,18 @@ static Context* (*user_handler)(Event, Context*) = NULL;
 Context* __am_irq_handle(Context *c) {
   if (user_handler) {
     Event ev = {0};
-    switch (c->mcause) {
-      case -1: ev.event = EVENT_YIELD; break;
-      default: ev.event = EVENT_ERROR; break;
-    }
+    if(c->mcause==-1)
+      ev.event=EVENT_YIELD;
+    else if (c->mcause>=0&&c->mcause<=19)
+    //according to navy-apps/libs/libos/syscall.h
+      ev.event=EVENT_SYSCALL;
+    else
+      ev.event=EVENT_ERROR;
+    
+    //switch (c->mcause) {
+      //case -1: ev.event = EVENT_YIELD; break;
+      //default: ev.event = EVENT_ERROR; break;
+    //}
 
     c = user_handler(ev, c);
     assert(c != NULL);
