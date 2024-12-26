@@ -13,8 +13,6 @@ void do_syscall(Context *c) {
   //case SYS_exit:halt(0);break;
   case 1:yield();c->GPRx=0;break;
   case 0:halt(0);break;
-  //对fwrite作调用就可以。
-  case 4:
   default: panic("Unhandled syscall ID = %d", a[0]);
   }
 }
