@@ -20,7 +20,7 @@ word_t isa_raise_intr(word_t NO, vaddr_t epc) {
    * Then return the address of the interrupt/exception vector.
    */
   //由于页故障，只对yield加4,其余后补。
-  if(NO==-1)
+  if(NO==-1 || NO==1)
     epc+=4;
   cpu.csrs.mcause = NO;
   cpu.csrs.mepc = epc;
