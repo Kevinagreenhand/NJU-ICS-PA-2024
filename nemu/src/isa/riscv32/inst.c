@@ -80,13 +80,14 @@ static uint32_t ecall_implemention(uint32_t pc){
 
 }
 static uint32_t mret_implemention(){
-  uint32_t tmp=0;
-  cpu.csrs.mstatus=cpu.csrs.mstatus&(~((1<<11)+(1<<12)));
-  tmp=(cpu.csrs.mstatus&(1<<7))>>7;
-  if(tmp==1)
-    cpu.csrs.mstatus=(((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))|(tmp<<3))|(1<<7);
-  else
-    cpu.csrs.mstatus=(((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))&(~(1<<3)))|(1<<7);  
+  //uint32_t tmp=0;
+  //第二次审阅讲义，发现不要求mstatus，因此注释掉，防bug。
+  //cpu.csrs.mstatus=cpu.csrs.mstatus&(~((1<<11)+(1<<12)));
+  //tmp=(cpu.csrs.mstatus&(1<<7))>>7;
+  //if(tmp==1)
+    //cpu.csrs.mstatus=(((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))|(tmp<<3))|(1<<7);
+  //else
+    //cpu.csrs.mstatus=(((cpu.csrs.mstatus&(~(1<<3)))&(~(1<<7)))&(~(1<<3)))|(1<<7);  
   return cpu.csrs.mepc;
 }
 
