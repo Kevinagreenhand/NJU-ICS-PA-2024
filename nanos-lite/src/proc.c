@@ -22,6 +22,7 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   switch_boot_pcb();
+  //对助教老师。我没有在loader里加fs文件操作，因此请更改navy-apps里的Makefile来运行测试
   naive_uload(NULL, NULL);
   Log("Initializing processes...");
   // load program here
