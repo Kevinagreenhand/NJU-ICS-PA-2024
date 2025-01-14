@@ -9,6 +9,8 @@ typedef struct {
   size_t disk_offset;
   ReadFn read;
   WriteFn write;
+  //新加入
+  size_t open_offset;
 } Finfo;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
@@ -33,4 +35,15 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+}
+
+int fs_open(const char *pathname, int flags, int mode){
+  for(int i=0;i<sizeof(file_table)/sizeof(Finfo);i++){
+    if(strcmp(file_table[i].name,pathname)==0){
+      file_table[i].open_offset=0;
+      return i;
+    }
+  }
+  panic("fs_open failed to find the file!");
+  return -1;
 }
