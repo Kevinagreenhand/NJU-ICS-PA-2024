@@ -24,12 +24,13 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
   panic("should not reach here");
   return 0;
 }
-
+extern size_t serial_write(const void *buf, size_t offset, size_t len);
 /* This is the information about all files in disk. */
+//注，讲义只说不接受stdin的读入，这里对于所有的read函数，我不做改动
 static Finfo file_table[] __attribute__((used)) = {
   [FD_STDIN]  = {"stdin", 0, 0, invalid_read, invalid_write},
-  [FD_STDOUT] = {"stdout", 0, 0, invalid_read, invalid_write},
-  [FD_STDERR] = {"stderr", 0, 0, invalid_read, invalid_write},
+  [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
+  [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
 #include "files.h"
 };
 
@@ -54,8 +55,9 @@ int fs_close(int fd){
   return 0;
 }
 size_t fs_read(int fd, void *buf, size_t len){
-  if(fd<=2)
-    return 0;
+  if(file_table[fd].read!=NULL){
+    return file_table[fd].read(buf,0,len);
+  }
   //注，这里假设offset不会越界,也就是在本次调用之前所有的offset被正确处理
   if(file_table[fd].open_offset+len>file_table[fd].size){
       len=file_table[fd].size-file_table[fd].open_offset;
@@ -66,12 +68,8 @@ size_t fs_read(int fd, void *buf, size_t len){
 }
 
 size_t fs_write(int fd, const void *buf, size_t len){
-  if(fd==0)
-    return 0;
-  else if(fd<=2){
-    for(int i=0;i<len;i++)
-      putch(*((char *)buf+i));
-    return len;
+  if(file_table[fd].write!=NULL){
+    return file_table[fd].write(buf,0,len);
   }
   if(file_table[fd].open_offset+len>file_table[fd].size){
       len=file_table[fd].size-file_table[fd].open_offset;

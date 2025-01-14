@@ -15,11 +15,13 @@ extern size_t fs_read(int fd, void *buf, size_t len);
 extern size_t fs_write(int fd, const void *buf, size_t len);
 extern size_t fs_lseek(int fd, size_t offset, int whence);
 extern int fs_close(int fd);
+
 static uintptr_t loader(PCB *pcb, const char *filename) {
   int fd = fs_open(filename, 0, 0);
   Elf_Ehdr ehdr;
   fs_read(fd, &ehdr, sizeof(Elf_Ehdr));
   Elf_Phdr phdr[ehdr.e_phnum];
+  //注，针对lseek的宏不知为何失效，这里的0是SEEK_SET
   fs_lseek(fd, ehdr.e_phoff, 0);
   fs_read(fd, phdr, sizeof(Elf_Phdr)*ehdr.e_phnum);
   //没找到assert的魔数到底是多少，暂时不按指导书加assert
