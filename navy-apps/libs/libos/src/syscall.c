@@ -44,7 +44,7 @@
 #else
 #error _syscall_ is not implemented
 #endif
-
+extern char end;//经过测试,end和_end效果一样，随便选一种
 intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
   register intptr_t _gpr1 asm (GPR1) = type;
   register intptr_t _gpr2 asm (GPR2) = a0;
@@ -71,7 +71,15 @@ int _write(int fd, void *buf, size_t count) {
 }
 
 void *_sbrk(intptr_t increment) {
-  return (void *)-1;
+  static char *brk = &end;
+  char *tmp=brk;
+  char *newbrk = brk + increment;
+  if(_syscall_(SYS_brk, 0, 0,0)==0){
+    brk=newbrk;
+    return (void *)tmp;}
+  else{
+    return (void *)-1;
+  }
 }
 
 int _read(int fd, void *buf, size_t count) {
