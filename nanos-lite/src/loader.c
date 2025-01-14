@@ -10,16 +10,23 @@
 #endif
 //to enanble ramdisk_read to be recognised
 extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
+extern int fs_open(const char *pathname, int flags, int mode);
+extern size_t fs_read(int fd, void *buf, size_t len);
+extern size_t fs_write(int fd, const void *buf, size_t len);
+extern size_t fs_lseek(int fd, size_t offset, int whence);
+extern int fs_close(int fd);
 static uintptr_t loader(PCB *pcb, const char *filename) {
-  //试了一下，好像不改也没关系，不再加fs_open之类的。
+  int fd = fs_open(filename, 0, 0);
   Elf_Ehdr ehdr;
-  ramdisk_read(&ehdr, 0, sizeof(Elf_Ehdr));
-  //没找到assert的魔数到底是多少，暂时不按指导书加assert
+  fs_read(fd, &ehdr, sizeof(Elf_Ehdr));
   Elf_Phdr phdr[ehdr.e_phnum];
-  ramdisk_read(phdr, ehdr.e_phoff, sizeof(Elf_Phdr)*ehdr.e_phnum);
+  fs_lseek(fd, ehdr.e_phoff, 0);
+  fs_read(fd, phdr, sizeof(Elf_Phdr)*ehdr.e_phnum);
+  //没找到assert的魔数到底是多少，暂时不按指导书加assert
   for (int i = 0; i < ehdr.e_phnum; i++) {
     if (phdr[i].p_type == PT_LOAD) {
-      ramdisk_read((void*)phdr[i].p_vaddr, phdr[i].p_offset, phdr[i].p_memsz);
+      fs_lseek(fd, phdr[i].p_offset, 0);
+      fs_read(fd, (void *)phdr[i].p_vaddr, phdr[i].p_memsz);
       memset((void*)(phdr[i].p_vaddr+phdr[i].p_filesz), 0, phdr[i].p_memsz - phdr[i].p_filesz);
     }
   }
