@@ -37,13 +37,65 @@ void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
 
+extern int ramdisk_read(void *buf, int offset, int len);
+extern int ramdisk_write(const void *buf, int offset, int len);
 int fs_open(const char *pathname, int flags, int mode){
-  for(int i=0;i<sizeof(file_table)/sizeof(Finfo);i++){
+  //自动忽略前三个特殊文件
+  for(int i=3;i<sizeof(file_table)/sizeof(Finfo);i++){
     if(strcmp(file_table[i].name,pathname)==0){
       file_table[i].open_offset=0;
       return i;
     }
   }
-  panic("fs_open failed to find the file!");
-  return -1;
+  assert(0);
+}
+
+int fs_close(int fd){
+  return 0;
+}
+size_t fs_read(int fd, void *buf, size_t len){
+  if(fd<=2)
+    return 0;
+  //注，这里假设offset不会越界,也就是在本次调用之前所有的offset被正确处理
+  if(file_table[fd].open_offset+len>file_table[fd].size){
+      len=file_table[fd].size-file_table[fd].open_offset;
+  }
+  ramdisk_read(buf,file_table[fd].open_offset+file_table[fd].disk_offset,len);
+  file_table[fd].open_offset+=len;
+  return len;
+}
+
+size_t fs_write(int fd, const void *buf, size_t len){
+  if(fd==0)
+    return 0;
+  else if(fd<=2){
+    for(int i=0;i<len;i++)
+      putch(*((char *)buf+i));
+    return len;
+  }
+  if(file_table[fd].open_offset+len>file_table[fd].size){
+      len=file_table[fd].size-file_table[fd].open_offset;
+  }
+  ramdisk_read((void*)buf,file_table[fd].open_offset+file_table[fd].disk_offset,len);
+  file_table[fd].open_offset+=len;
+  return len;
+}
+size_t fs_lseek(int fd, size_t offset, int whence) {
+    if(fd<=2)
+      return 0;
+    if(whence==SEEK_SET){
+      assert(offset <= file_table[fd].size);
+      file_table[fd].open_offset = offset;
+    }
+    else if(whence==SEEK_CUR){
+      assert(file_table[fd].open_offset+ offset <= file_table[fd].size);
+      file_table[fd].open_offset = file_table[fd].open_offset+ offset;
+    }
+    else if(whence== SEEK_END){
+      assert(file_table[fd].size + offset <= file_table[fd].size);
+      file_table[fd].open_offset =  file_table[fd].size + offset;
+    }
+    else
+      assert(0);
+    return file_table[fd].open_offset;
 }
