@@ -6,7 +6,7 @@ int main() {
   int ms = 500;
   while (1) {
     gettimeofday(&tv, NULL);
-    if (tv.tv_usec==0 ||tv.tv_usec==500000) {
+    if (tv.tv_sec*1000+tv.tv_usec/1000>=ms) {
     printf("time %d ", tv.tv_sec);
     printf("ms = %d\n", ms);
     ms += 500;
