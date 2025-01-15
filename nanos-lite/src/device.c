@@ -23,6 +23,9 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 size_t events_read(void *buf, size_t offset, size_t len) {
   AM_INPUT_KEYBRD_T keyboard_message = io_read(AM_INPUT_KEYBRD);
   char *readhelp=(char*)buf;
+  //注，后来发现可以直接vprintf，但是因为实现没问题，所以不改了
+  //注意，这里根本没有考虑越界，只是加了assert
+  assert(len<=64);
   if(keyboard_message.keycode==AM_KEY_NONE){
     *readhelp='\0';
     return 0;
@@ -51,7 +54,11 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  AM_GPU_CONFIG_T display_message = io_read(AM_GPU_CONFIG);
+  //注意，这里根本没有考虑越界，只是加了assert
+  assert(len<=64);
+  return sprintf((char*)buf,"WIDTH:%d\nHEIGHT:%d\n",display_message.width,display_message.height);
+
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
