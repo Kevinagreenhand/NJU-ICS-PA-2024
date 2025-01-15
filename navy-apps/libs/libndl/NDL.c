@@ -7,6 +7,8 @@
 static int evtdev = -1;
 static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
+//新加入的
+static int canvas_w = 0, canvas_h = 0;
 
 uint32_t NDL_GetTicks() {
   //由于初始化的时间可以很短，因此这里不对时间的修正，也就是没有在init的时候初始化，不减去init的时间
@@ -43,9 +45,20 @@ void NDL_OpenCanvas(int *w, int *h) {
     }
     close(fbctl);
   }
+  if(*w==0&&*h==0)
+    *w = screen_w; *h = screen_h;
+  assert(*w<=screen_w&&*h<=screen_h);
+  canvas_w = *w; canvas_h = *h;
+    
 }
 
 void NDL_DrawRect(uint32_t *pixels, int x, int y, int w, int h) {
+  int graph_fd = open("/dev/fb", 0, 0);
+  for (int i = 0; i < h && y + i < canvas_h; i++) {
+    lseek(graph_fd, ((y + (screen_h-canvas_h)/2 + i) * screen_w + (screen_w-canvas_w)/2 + x) * 4, SEEK_SET);
+    write(graph_fd, pixels + i * w, 4 * (w < canvas_w - x ? w : canvas_w - x));
+  }
+
 }
 
 void NDL_OpenAudio(int freq, int channels, int samples) {
@@ -69,8 +82,6 @@ int NDL_Init(uint32_t flags) {
   int screen_fd = open("/proc/dispinfo",0,0);
   char buf[64];
   read(screen_fd, buf, 64);
-  uint32_t haahah=999;
-  printf("%o",haahah);
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
   return 0;
 }
