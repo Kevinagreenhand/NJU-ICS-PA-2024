@@ -66,6 +66,7 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
+  Log("ready to open");
   int screen_fd = open("proc/dispinfo",0,0);
   char buf[64];
   read(screen_fd, buf, 64);
