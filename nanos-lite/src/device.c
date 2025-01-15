@@ -37,7 +37,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
       *readhelp++=' ';
       for(int i=0;i<strlen(keyname[keyboard_message.keycode]);i++)
         *readhelp++=keyname[keyboard_message.keycode][i];
-      //*readhelp++='\n';
+      *readhelp++='\n';
       *readhelp='\0';
     }
     else{
@@ -46,7 +46,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
       *readhelp++=' ';
       for(int i=0;i<strlen(keyname[keyboard_message.keycode]);i++)
         *readhelp++=keyname[keyboard_message.keycode][i];
-      //*readhelp++='\n';
+      *readhelp++='\n';
       *readhelp='\0';
     }
     return readhelp-(char*)buf;
