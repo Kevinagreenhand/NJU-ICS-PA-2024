@@ -9,6 +9,7 @@ static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 
 uint32_t NDL_GetTicks() {
+  //由于初始化的时间可以很短，因此这里不对时间的修正，也就是没有在init的时候初始化，不减去init的时间
   struct timeval tv;
   gettimeofday(&tv, NULL);
   return tv.tv_sec * 1000 + tv.tv_usec / 1000;
