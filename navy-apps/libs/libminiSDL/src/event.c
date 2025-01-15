@@ -7,6 +7,7 @@ static const char *keyname[] = {
   "NONE",
   _KEYS(keyname)
 };
+uint8_t keystate[256] = {};
 
 int SDL_PushEvent(SDL_Event *ev) {
   return 0;
