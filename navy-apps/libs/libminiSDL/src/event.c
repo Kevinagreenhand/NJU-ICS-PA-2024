@@ -8,7 +8,7 @@ static const char *keyname[] = {
   _KEYS(keyname)
 };
 uint8_t keystate[256] = {};
-
+static uint8_t key_state[sizeof(keyname) / sizeof(keyname[0])] = {0};
 int SDL_PushEvent(SDL_Event *ev) {
   return 0;
 }
@@ -38,20 +38,26 @@ int SDL_PollEvent(SDL_Event *ev) {
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
-  char buf[64];
-  char type[8], key_name[8];
-  int keycode;
+  uint8_t type = 0, sym = 0;
+  //SDL_PumpEvents();
 
-  while (1) {
-    if (NDL_PollEvent(buf, sizeof(buf)) == 0) {
-      continue;
-    }
-    sscanf(buf, "%s %s %d\n", type, key_name, &keycode);
-    event->type = buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN;
-    event->key.keysym.sym = keycode;
-    return 1;
+  //while (!pop(&type, &sym)){
+  while (!read_keyinfo(&type, &sym)){
+    //SDL_PumpEvents();
   }
-  return 0;
+  
+  event->type = type;
+  event->key.keysym.sym = sym;
+
+  switch(type){
+    case SDL_KEYDOWN:
+      key_state[sym] = 1;
+      break;
+    
+    case SDL_KEYUP:
+      key_state[sym] = 0;
+      break;
+  }
 }
 
 int SDL_PeepEvents(SDL_Event *ev, int numevents, int action, uint32_t mask) {
