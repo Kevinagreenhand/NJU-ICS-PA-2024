@@ -69,8 +69,9 @@ int NDL_Init(uint32_t flags) {
   int screen_fd = open("/proc/dispinfo",0,0);
   char buf[64];
   read(screen_fd, buf, 64);
+  uint32_t haahah=999;
+  printf("%u",haahah);
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
-  printf("%d,%d",screen_w,screen_h);
   return 0;
 }
 
