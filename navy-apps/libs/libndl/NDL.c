@@ -66,12 +66,6 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-  printf("ready ro open");
-  int screen_fd = open("proc/dispinfo",0,0);
-  char buf[64];
-  read(screen_fd, buf, 64);
-  sscanf(buf, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
-  printf("screen_w=%d, screen_h=%d\n", screen_w, screen_h);
   return 0;
 }
 
