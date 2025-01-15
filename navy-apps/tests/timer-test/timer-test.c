@@ -6,7 +6,7 @@ int main() {
   while (1) {
     tmp=NDL_GetTicks();
     if (tmp%500==0) {
-    printf("time %d ", tmp);
+    printf("time %d\n ", tmp);
     ms += 500;
   }
 }
