@@ -70,7 +70,7 @@ int NDL_Init(uint32_t flags) {
   char buf[64];
   read(screen_fd, buf, 64);
   uint32_t haahah=999;
-  printf("%u",haahah);
+  printf("%o",haahah);
   sscanf(buf, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
   return 0;
 }
