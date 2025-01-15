@@ -1,7 +1,7 @@
 #include <common.h>
 #include "syscall.h"
 //为了gettimeofday
-#include <sys/_timeval.h>
+//#include <sys/_timeval.h>
 #include <sys/time.h>
 extern int fs_open(const char *pathname, int flags, int mode);
 extern size_t fs_read(int fd, void *buf, size_t len);
