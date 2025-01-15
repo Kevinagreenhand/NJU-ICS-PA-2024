@@ -13,17 +13,27 @@ int SDL_PushEvent(SDL_Event *ev) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {
-  char buf[64];
-  char type[8], key_name[8];
-  int keycode;
-
-  if (NDL_PollEvent(buf, 0) == 0) {
+  char key[64]={0};
+  char state[2],name[15];
+  memset(key,0,sizeof(key));
+  key[0] = '0';
+  int keycode = 0;
+  int ret=NDL_PollEvent(key,sizeof(key));
+  if(key[0]=='0'){
+    ev->key.keysym.sym = SDLK_NONE;
+    ev->type = SDL_USEREVENT;
     return 0;
   }
-  sscanf(buf, "%s %s %d\n", type, key_name, &keycode);
-  ev->type = buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN;
-  ev->key.keysym.sym = keycode;
-  return 1; 
+  sscanf(key,"%s %s\n",state,name);
+  ev->key.type = ev->type =(state[1] == 'd') ? SDL_KEYDOWN : SDL_KEYUP;
+  for (int i = 0; i < 83; i++) {
+    if (!strcmp(keyname[i], name)) {
+      ev->key.keysym.sym = i;
+      keystate[i] = (state[1] == 'd') ? 1 : 0;
+      break;
+    }
+  }
+  return 1;
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
