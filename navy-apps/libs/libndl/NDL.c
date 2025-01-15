@@ -10,7 +10,7 @@ static int screen_w = 0, screen_h = 0;
 
 uint32_t NDL_GetTicks() {
   struct timeval tv;
-  sys_gettimeofday(&tv, NULL);
+  gettimeofday(&tv, NULL);
   return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
