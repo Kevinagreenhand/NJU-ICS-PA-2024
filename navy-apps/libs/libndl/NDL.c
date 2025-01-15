@@ -66,8 +66,11 @@ int NDL_Init(uint32_t flags) {
   if (getenv("NWM_APP")) {
     evtdev = 3;
   }
-//简化版本的，没有读proc/dispinfo文件，而是直接设置w,h=400,300
-//这是因为我打印了这两个字符串
+  int screen_fd = open("proc/dispinfo",0,0);
+  char buf[64];
+  read(screen_fd, buf, 64);
+  sscanf(buf, "WIDTH:%d\nHEIGHT:%d\n", &screen_w, &screen_h);
+  printf("%d",screen_w);
   return 0;
 }
 
