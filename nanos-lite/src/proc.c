@@ -36,20 +36,26 @@ void init_proc() {
 Context* schedule(Context *prev) {
   //return NULL;
 
-  printf("%d\n",current);
-  if(current==&pcb[0]){
-    printf("switch to pcb[1]");
-    pcb[0].cp = prev;
-    current = &pcb[1];
-  printf("%d\n",current);
-    return pcb[1].cp;
-  }
-  else{
-    printf("switch to pcb[0]");
-    pcb[1].cp = prev;
-    current = &pcb[0];
-  printf("%d\n",current);
-    return pcb[0].cp;
-  }
+  //printf("%d\n",current);
+  //if(current==&pcb[0]){
+    //printf("switch to pcb[1]");
+    //pcb[0].cp = prev;
+    //current = &pcb[1];
+  //printf("%d\n",current);
+    //return pcb[1].cp;
+  //}
+  //else{
+    //printf("switch to pcb[0]");
+    //pcb[1].cp = prev;
+    //current = &pcb[0];
+  //printf("%d\n",current);
+    //return pcb[0].cp;
+  //}
+
+  //由于神秘原因，使用if else会出现&pcb[0]和&pcb[1]之外的第三个值
+  //初步推测应该和PCB类型的union有关，换用没问题的写法
+  current->cp = prev;
+  current = ((current == &pcb[0]) ? &pcb[1] : &pcb[0]);
+  return current->cp;
 }
 
