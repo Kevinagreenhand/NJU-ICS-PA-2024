@@ -101,10 +101,16 @@ static int decode_exec(Decode *s) {
   decode_operand(s, &rd, &src1, &src2, &imm, concat(TYPE_, type)); \
   __VA_ARGS__ ; \
 }
+#define PRINT_BINARY(num) \
+    do { \
+        for (int i = 31; i >= 0; i--) { \
+            printf("%d", (num >> i) & 1); \
+        } \
+        printf("\n"); \
+    } while (0)
 //newly added
 
-#define CSR(i) *csr_reg(i)
-#define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val("a7", &success), s->pc)); }
+
 
   INSTPAT_START();
   INSTPAT("??????? ????? ????? ??? ????? 00101 11", auipc  , U, R(rd) = s->pc + imm);
@@ -184,7 +190,9 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->pc));
   INSTPAT("0011000 00010 00000 000 00000 11100 11",mret,R,s->dnpc=mret_implemention());
-  printf("something wrong");
+  printf("something wrong\n");
+  PRINT_BINARY(s->isa.inst);
+  printf("s->pc=%x\n",s->pc);
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
   INSTPAT_END();
 
