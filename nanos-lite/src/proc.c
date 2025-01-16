@@ -28,7 +28,7 @@ void context_uload(PCB *pcb, const char *filename) {
   //这里弄了个一模一样的在外面用，起了一个不会引起冲突的名字。
   unsigned long entry = loader_to_use_outside(pcb, filename);
   pcb->cp = ucontext(NULL, (Area){pcb->stack, pcb->stack + 32768}, (void*)entry);
-  pcb->cp->GPRx = (unsigned long) heap.end;
+  *(pcb->cp->gpr+10) = (unsigned long) heap.end;
 }
 
 void init_proc() {
