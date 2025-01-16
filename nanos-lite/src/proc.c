@@ -36,7 +36,7 @@ void init_proc() {
 Context* schedule(Context *prev) {
   //return NULL;
   current->cp = prev;
- 
+  printf("%d",current);
   current = ((current == &pcb[0]) ? &pcb[1] : &pcb[0]);
  
   // then return the new context
