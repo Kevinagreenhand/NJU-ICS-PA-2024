@@ -36,11 +36,13 @@ void init_proc() {
 Context* schedule(Context *prev) {
   //return NULL;
   if(current==&pcb[0]){
+    printf("switch to pcb[1]");
     pcb[0].cp = prev;
     current = &pcb[1];
     return pcb[1].cp;
   }
   else{
+    printf("switch to pcb[0]");
     pcb[1].cp = prev;
     current = &pcb[0];
     return pcb[0].cp;
