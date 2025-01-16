@@ -27,8 +27,8 @@ void init_proc() {
   context_kload(&pcb[0], hello_fun, (void*)114514);
   context_kload(&pcb[1], hello_fun, (void*)1919810);
   switch_boot_pcb();
-  naive_uload(NULL, "/bin/bird");
-  Log("Initializing processes...");
+  //naive_uload(NULL, "/bin/dummy");
+  //Log("Initializing processes...");
   // load program here
 
 }
