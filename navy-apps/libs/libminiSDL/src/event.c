@@ -19,11 +19,10 @@ int SDL_PollEvent(SDL_Event *ev) {
   char type[8];
   if (NDL_PollEvent(buf, 0) == 0)
     return 0;
-  sscanf(buf, "%s ", type);
   if(buf[1]=='u')
-    ev->type==SDL_KEYUP;
+    ev->type=SDL_KEYUP;
   else
-    ev->type==SDL_KEYDOWN;
+    ev->type=SDL_KEYDOWN;
   return 1; 
 }
 
