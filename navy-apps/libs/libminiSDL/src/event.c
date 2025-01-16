@@ -21,7 +21,7 @@ int SDL_PollEvent(SDL_Event *ev) {
     return 0;
   }
   sscanf(buf, "%s %s %d\n", type, key_name, &keycode);
-  printf("I'm here\n");
+  printf("%s\n",keycode);
   ev->type = buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN;
   ev->key.keysym.sym = keycode;
   return 1; 
