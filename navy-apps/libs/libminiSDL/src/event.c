@@ -39,7 +39,6 @@ int SDL_PollEvent(SDL_Event *ev) {
 
         ev->key.keysym.sym = i;
 
-        assert(i != 0);
 
         return 1;
 
@@ -83,7 +82,6 @@ int SDL_WaitEvent(SDL_Event *event) {
 
         event->key.keysym.sym = i;
 
-        assert(i != 0);
 
         return 1;
 
@@ -91,7 +89,6 @@ int SDL_WaitEvent(SDL_Event *event) {
 
     }
 
-    assert(0); 
 
   }
 
