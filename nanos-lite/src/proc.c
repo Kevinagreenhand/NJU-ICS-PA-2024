@@ -35,8 +35,15 @@ void init_proc() {
 
 Context* schedule(Context *prev) {
   //return NULL;
-  current->cp = prev;
-  current = ((current == &pcb[0]) ? &pcb[1] : &pcb[0]);
-  return current->cp;
+  if(current==&pcb[0]){
+    pcb[0].cp = prev;
+    current = &pcb[1];
+    return pcb[1].cp;
+  }
+  else{
+    pcb[1].cp = prev;
+    current = &pcb[0];
+    return pcb[0].cp;
+  }
 }
 
