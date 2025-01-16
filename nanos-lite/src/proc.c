@@ -22,7 +22,7 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   switch_boot_pcb();
-  naive_uload(NULL, "/bin/bird");
+  naive_uload(NULL, "/bin/file-test");
   printf("end\n");
   Log("Initializing processes...");
   // load program here
