@@ -4,8 +4,9 @@
 
 #define SDL_STBIMAGE_IMPLEMENTATION
 #include "SDL_stbimage.h"
-extern int open(const char *path, int flags, ...);
-extern ssize_t read(int fd, void *buf, size_t count);
+extern int open (const char *file,int flags, ...);
+extern int read (int fd,void *buf,size_t cnt);
+extern long lseek (int fd,long pos,int whence);
 SDL_Surface* IMG_Load_RW(SDL_RWops *src, int freesrc) {
   assert(src->type == RW_TYPE_MEM);
   assert(freesrc == 0);

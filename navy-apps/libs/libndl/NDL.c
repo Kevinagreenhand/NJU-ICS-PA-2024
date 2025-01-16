@@ -9,7 +9,7 @@ static int fbdev = -1;
 static int screen_w = 0, screen_h = 0;
 //新加入的
 static int canvas_w = 0, canvas_h = 0;
-extern int open(const char *path, int flags, ...);
+extern int open (const char *file,int flags, ...);
 uint32_t NDL_GetTicks() {
   //由于初始化的时间可以很短，因此这里不对时间的修正，也就是没有在init的时候初始化，不减去init的时间
   struct timeval tv;
