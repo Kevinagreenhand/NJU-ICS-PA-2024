@@ -24,6 +24,8 @@ void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   pcb->cp = kcontext((Area){pcb->stack, pcb->stack + 32768}, entry, arg);//8*4096,其实是栈的大小
 }
 void context_uload(PCB *pcb, const char *filename) {
+  //注，loader.c中的loader是static函数，没法在外部用。
+  //这里弄了个一模一样的在外面用，起了一个不会引起冲突的名字。
   unsigned long entry = loader_to_use_outside(pcb, filename);
   pcb->cp = ucontext(NULL, (Area){pcb->stack, pcb->stack + 32768}, (void*)entry);
   pcb->cp->GPRx = (unsigned long) heap.end;

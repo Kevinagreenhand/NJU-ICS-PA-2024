@@ -23,6 +23,9 @@ typedef struct {
   uint32_t mepc;
   uint32_t mstatus;
   uint32_t mtvec;
+  //新加入，为了PA4.1
+  uint32_t satp;
+  uint32_t mscratch;
 } CSRs;
 
 typedef struct {

@@ -70,6 +70,11 @@ static uint32_t *choose_a_csr(uint32_t imm){
     return &(cpu.csrs.mepc);
   else if(imm==0x342)
     return &(cpu.csrs.mcause);
+  //为了PA4.1新加的
+  else if(imm==0x180)
+    return &(cpu.csrs.satp);
+  else if(imm==0x340)
+    return &(cpu.csrs.mscratch);
   else
     return NULL;
 }
