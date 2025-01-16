@@ -26,6 +26,7 @@ int SDL_PollEvent(SDL_Event *ev) {
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
+  printf("666666\n");
   char buf[64];
   char type[8], keyname[8];
   int keycode;
