@@ -22,7 +22,6 @@ void hello_fun(void *arg) {
 
 void init_proc() {
   switch_boot_pcb();
-  printf("man!\n");
   naive_uload(NULL, "/bin/bird");
   printf("end\n");
   Log("Initializing processes...");
