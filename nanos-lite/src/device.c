@@ -15,12 +15,14 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
+  yield();
   for(int i=0;i<len;i++)
     putch(*((char*)buf+i));
   return len;
 }
 
 size_t events_read(void *buf, size_t offset, size_t len) {
+  yield();
   AM_INPUT_KEYBRD_T keyboard_message = io_read(AM_INPUT_KEYBRD);
   char *readhelp=(char*)buf;
   //注，后来发现可以直接vprintf，但是因为实现没问题，所以不改了
@@ -62,6 +64,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
+  yield();
   AM_GPU_CONFIG_T tmp = io_read(AM_GPU_CONFIG);
   io_write(AM_GPU_FBDRAW, offset - (offset / tmp.width) * tmp.width, offset / tmp.width, (void *)buf, len, 1, true);
   return len;

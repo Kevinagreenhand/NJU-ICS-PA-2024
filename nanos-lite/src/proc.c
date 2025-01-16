@@ -7,6 +7,7 @@ static PCB pcb_boot = {};
 PCB *current = NULL;
 //to enable naive_load to be recognized
 extern void naive_uload(PCB *pcb, const char *filename);
+extern uintptr_t loader_to_use_outside(PCB *pcb, const char *filename);
 void switch_boot_pcb() {
   current = &pcb_boot;
 }
@@ -22,10 +23,15 @@ void hello_fun(void *arg) {
 void context_kload(PCB *pcb, void (*entry)(void *), void *arg) {
   pcb->cp = kcontext((Area){pcb->stack, pcb->stack + 32768}, entry, arg);//8*4096,其实是栈的大小
 }
+void context_uload(PCB *pcb, const char *filename) {
+  unsigned long entry = loader_to_use_outside(pcb, filename);
+  pcb->cp = ucontext(NULL, (Area){pcb->stack, pcb->stack + 32768}, (void*)entry);
+  pcb->cp->GPRx = (unsigned long) heap.end;
+}
 
 void init_proc() {
   context_kload(&pcb[0], hello_fun, (void*)114514);
-  context_kload(&pcb[1], hello_fun, (void*)1919810);
+  context_uload(&pcb[1], "/bin/bird");
   switch_boot_pcb();
   //naive_uload(NULL, "/bin/dummy");
   //Log("Initializing processes...");
@@ -52,7 +58,7 @@ Context* schedule(Context *prev) {
     //return pcb[0].cp;
   //}
 
-  //由于神秘原因，使用if else会出现&pcb[0]和&pcb[1]之外的第三个值
+  //由于神秘原因，使用if else会出现&pcb[0]和&pcb[1]之外的第三个值？
   //初步推测应该和PCB类型的union有关，换用没问题的写法
   current->cp = prev;
   current = ((current == &pcb[0]) ? &pcb[1] : &pcb[0]);

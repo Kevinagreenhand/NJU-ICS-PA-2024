@@ -12,7 +12,7 @@ static Area segments[] = {      // Kernel memory mappings
 };
 
 #define USER_SPACE RANGE(0x40000000, 0x80000000)
-
+extern Context *kcontext(Area kstack, void (*entry)(void *), void *arg);
 static inline void set_satp(void *pdir) {
   uintptr_t mode = 1ul << (__riscv_xlen - 1);
   asm volatile("csrw satp, %0" : : "r"(mode | ((uintptr_t)pdir >> 12)));
@@ -70,5 +70,8 @@ void map(AddrSpace *as, void *va, void *pa, int prot) {
 }
 
 Context *ucontext(AddrSpace *as, Area kstack, void *entry) {
-  return NULL;
+  //和kcontext一模一样，少了寄存器传参
+  Context *new_context_pointer = (Context *)(kstack.end-sizeof(Context));
+  new_context_pointer->mepc=(unsigned long)entry;
+  return new_context_pointer;
 }
