@@ -26,17 +26,6 @@ int SDL_PollEvent(SDL_Event *ev) {
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
-  printf("666666\n");
-  char buf[64];
-  char type[8], keyname[8];
-  int keycode;
-  while (true)
-    if (NDL_PollEvent(buf, sizeof(buf))!=0) 
-      break;
-  sscanf(buf, "%s %s %d\n", type, keyname, &keycode);
-  event->type = buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN;
-  printf("the keycode is\n");
-  event->key.keysym.sym = keycode;
   return 1;
 }
 
