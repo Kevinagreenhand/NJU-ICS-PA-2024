@@ -19,6 +19,7 @@ uint32_t NDL_GetTicks() {
 
 int NDL_PollEvent(char *buf, int len) {
   //注意，这里应该是直接open。若错，后改
+  printf("it is used ndl poll event\n");
   int fd = open("/dev/events", 0, 0);
   int tmp = read(fd, (void*)buf, len);
   if(tmp==0)
