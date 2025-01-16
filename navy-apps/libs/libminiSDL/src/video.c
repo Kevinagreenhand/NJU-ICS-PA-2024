@@ -5,47 +5,177 @@
 #include <stdlib.h>
 
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
-  	assert(dst && src);
-  	assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+  assert(dst && src);
 
-  	int w = 0, h = 0;
-    int src_x = 0, src_y = 0;
-    int dst_x = 0, dst_y = 0;
-    if (srcrect) {
-      w = srcrect->w; h = srcrect->h;
-      src_x = srcrect->x; src_y = srcrect->y;
-    } else {
-      w = src->w; h = src->h;
-    }
-    if (dstrect) {
-      dst_x = dstrect->x; dst_y = dstrect->y;
-    } 
-    
-    uint32_t *tmp_src = (uint32_t *)src->pixels;
-    uint32_t *tmp_dst = (uint32_t *)dst->pixels;
-    for (int i = 0; i < h; i++) {
-      for (int j = 0; j < w; j++) {
-        tmp_dst[(dst_y + i) * dst->w + dst_x + j] = tmp_src[(src_y + i) * src->w + src_x + j];
-      }
-    }
+  assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
+
+  int sw, dw;
+
+  int sh, dh;
+
+  int sx, dx;
+
+  int sy, dy;
+
+  uint32_t *sp = (uint32_t *)src->pixels;
+
+  uint32_t *dp = (uint32_t *)dst->pixels;
+
+ 
+
+  if (srcrect == NULL && dstrect == NULL) {
+
+    //要将 完全的src画布 复制到 完整的dst画布上
+
+    sw = (int)src->w; 
+
+    sh = (int)src->h; 
+
+    sx = 0; 
+
+    sy = 0;
+
+    dw = (int)dst->w; 
+
+    dh = (int)dst->h;
+
+    dx = 0;
+
+    dy = 0;
+
+    assert(dw == sw && dh == sh);
+
+  } else if (srcrect == NULL && dstrect != NULL){
+
+    //要将 完全的src画布 复制到 dstrect指定的dst画布上
+
+    sw = (int)src->w; 
+
+    sh = (int)src->h; 
+
+    sx = 0; 
+
+    sy = 0;
+
+    //画的高和宽是由源画布决定的
+
+    dw = sw;
+
+    dh = sh;
+
+    dx = (int)dstrect->x;
+
+    dy = (int)dstrect->y;
+
+    //assert(dstrect->w >= sw && dstrect->h >= sh);
+
+  } else if (srcrect != NULL && dstrect == NULL) {
+
+    //要将 srcrect指定的src画布 复制到 完全的dst画布上
+
+    sw = (int)srcrect->w; 
+
+    sh = (int)srcrect->h; 
+
+    sx = 0; 
+
+    sy = 0;
+
+    //画的高和宽是由源画布决定的
+
+    dw = sw;
+
+    dh = sh;
+
+    dx = 0;
+
+    dy = 0;
+
+    //assert(dst->w >= sw && dst->h >= sh);
+
+  } else if (srcrect != NULL && dstrect != NULL){
+
+    //要将 srcrect指定的src画布 复制到 dstrect指定的dst画布上
+
+    sw = (int)srcrect->w; 
+
+    sh = (int)srcrect->h; 
+
+    sx = (int)srcrect->x; 
+
+    sy = (int)srcrect->y; 
+
+    dw = (int)dstrect->w;
+
+    dh = (int)dstrect->h;
+
+    dx = (int)dstrect->x;
+
+    dy = (int)dstrect->y;
+
+    assert(dw == sw && dh == sh);
+
+  }
+
+ 
+
+  for (int i = 0; i < sh; i++)
+
+    for (int j = 0; j < sw; j++)
+
+      dp[(dy + i) * dst->w + dx + j] = sp[(sy + i) * src->w + sx + j];
+
+  NDL_DrawRect(dp, dx, dy, dw, dh);
 }
 
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
-    int x, y, w, h;
-  if (dstrect) {
-    x = dstrect->x; y = dstrect->y;
-    w = dstrect->w; h = dstrect->h;
+  assert(dst);
+
+  uint32_t *pixels = (uint32_t *)dst->pixels;
+
+  int w;
+
+  int h;
+
+  int x;
+
+  int y;
+
+ 
+
+  if (dstrect == NULL){
+
+    w = (int)dst->w;
+
+    h = (int)dst->h;
+
+    x = 0; 
+
+    y = 0;
+
   } else {
-    x = y = 0;
-    w = dst->w; h = dst->h;
+
+    w = (int)dstrect->w;
+
+    h = (int)dstrect->h;
+
+    x = (int)dstrect->x;
+
+    y = (int)dstrect->y;
+
   }
 
-  uint32_t *pixels = (uint32_t *)(dst->pixels);
-  for(int i = 0; i < h; i++) {
-    for (int j = 0; j < w; j++) {
-      pixels[(y + i) * w + x + j] = color;
-    }
-  }
+  color = SDL_MapRGBA(dst->format,color >> 16 & 0xFF, color >> 8 & 0xFF, color & 0xFF, color >> 24 & 0xFF);
+
+ 
+
+  for (int i = 0; i < h; i++)
+
+    for (int j = 0; j < w; j++)
+
+      pixels[(y + i) * dst->w + x + j] = color;
+
+  NDL_DrawRect(pixels, x, y, w, h);
 }
 
 void SDL_UpdateRect(SDL_Surface *s, int x, int y, int w, int h) {
