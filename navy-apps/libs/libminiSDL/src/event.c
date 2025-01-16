@@ -46,7 +46,6 @@ int SDL_PollEvent(SDL_Event *ev) {
 
     }
 
-    assert(0); 
 
   }
 
