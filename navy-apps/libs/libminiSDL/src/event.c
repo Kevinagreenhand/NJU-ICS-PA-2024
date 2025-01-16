@@ -20,7 +20,7 @@ int SDL_PollEvent(SDL_Event *ev) {
   if (NDL_PollEvent(buf, 0) == 0)
     return 0;
   sscanf(buf, "%s ", type);
-  if(*(buf+1)=='u')
+  if(buf[1]=='u')
     ev->type==SDL_KEYUP;
   else
     ev->type==SDL_KEYDOWN;
