@@ -30,7 +30,6 @@ int SDL_PollEvent(SDL_Event *ev) {
 
     else if (strcmp(keytype, "ku") == 0) ev->type = SDL_KEYUP;
 
-    else assert(0);
 
     for (int i = 0; i < sizeof(keyname) / sizeof(keyname[0]); i++){
 
