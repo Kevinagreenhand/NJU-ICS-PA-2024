@@ -1,5 +1,5 @@
 #include <stdio.h>
-//extern uint32_t NDL_GetTicks();
+extern uint32_t NDL_GetTicks();
 int main() {
   uint32_t tmp=0;
   int flag=0;
