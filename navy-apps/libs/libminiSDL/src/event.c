@@ -14,18 +14,21 @@ int SDL_PushEvent(SDL_Event *ev) {
 }
 
 int SDL_PollEvent(SDL_Event *ev) {
+  //这里实现的是读了flappy bird代码之后的简化版本，因为这个游戏只要求识别按键是落下还是抬起
   char buf[64];
-  char type[8], key_name[8];
-  int keycode;
-  if (NDL_PollEvent(buf, 0) == 0) {
+  char type[8];
+  if (NDL_PollEvent(buf, 0) == 0)
     return 0;
-  }
   sscanf(buf, "%s ", type);
-  ev->type = buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN;
+  if(*(buf+1)=='u')
+    ev->type==SDL_KEYUP;
+  else
+    ev->type==SDL_KEYDOWN;
   return 1; 
 }
 
 int SDL_WaitEvent(SDL_Event *event) {
+  //按理说应该实现，但是由于读了flappy bird代码发现不需要，所以没实现
   return 1;
 }
 
