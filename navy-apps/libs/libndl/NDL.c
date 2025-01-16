@@ -21,7 +21,6 @@ int NDL_PollEvent(char *buf, int len) {
   //注意，这里应该是直接open。若错，后改
   int fd = open("/dev/events", 0, 0);
   int tmp = read(fd, (void*)buf, len);
-  printf("%s\n",buf);
   if(tmp==0)
     return 0;
   else
