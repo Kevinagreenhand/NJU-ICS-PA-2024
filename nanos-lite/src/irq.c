@@ -1,10 +1,10 @@
 #include <common.h>
 
 extern void do_syscall(Context *c);
-
+Context* schedule(Context *prev);
 static Context* do_event(Event e, Context* c) {
   switch (e.event) {
-    case EVENT_YIELD : Log("yield can be recognized!"); break;
+    case EVENT_YIELD : Context* tmp=schedule(c);return tmp;break;
     case EVENT_SYSCALL : do_syscall(c);break;
     default: panic("Unhandled event ID = %d", e.event);
   }
