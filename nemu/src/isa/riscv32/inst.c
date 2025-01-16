@@ -190,6 +190,8 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = *choose_a_csr(imm); *choose_a_csr(imm) |= src1);
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , N, s->dnpc=ecall_implemention(s->pc));
   INSTPAT("0011000 00010 00000 000 00000 11100 11",mret,R,s->dnpc=mret_implemention());
+  //for flappy bird
+  INSTPAT("0000001 ????? ????? 011 ????? 01100 11", mulhu  , R, uint64_t tmp = (uint64_t)src1 * (uint64_t)src2; R(rd) = BITS(tmp, 63, 32));
   printf("something wrong\n");
   PRINT_BINARY(s->isa.inst);
   printf("s->pc=%x\n",s->pc);
