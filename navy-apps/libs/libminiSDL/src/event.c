@@ -36,6 +36,7 @@ int SDL_WaitEvent(SDL_Event *event) {
       break;
   sscanf(buf, "%s %s %d\n", type, keyname, &keycode);
   event->type = buf[1] == 'u' ? SDL_KEYUP : SDL_KEYDOWN;
+  printf("the keycode is %d\n",keycode);
   event->key.keysym.sym = keycode;
   return 1;
 }
