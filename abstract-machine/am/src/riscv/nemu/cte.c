@@ -43,7 +43,7 @@ Context *kcontext(Area kstack, void (*entry)(void *), void *arg) {
   //return NULL;
   Context *new_context_pointer = (Context *)(kstack.end-sizeof(Context));
   new_context_pointer->mepc=(unsigned long)entry;
-  new_context_pointer->gpr[10]=(unsigned long)arg;
+  *(new_context_pointer->gpr+10)=(unsigned long)arg;
   return new_context_pointer;
 }
 
