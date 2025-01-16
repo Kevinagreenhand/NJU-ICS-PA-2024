@@ -7,25 +7,18 @@
 void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect) {
   	assert(dst && src);
   	assert(dst->format->BitsPerPixel == src->format->BitsPerPixel);
-
-  	int w = 0, h = 0;
-    int src_x = 0, src_y = 0;
-    int dst_x = 0, dst_y = 0;
-    if (srcrect) {
-      w = srcrect->w; h = srcrect->h;
-      src_x = srcrect->x; src_y = srcrect->y;
-    } else {
-      w = src->w; h = src->h;
-    }
-    if (dstrect) {
-      dst_x = dstrect->x; dst_y = dstrect->y;
-    } 
-    
-    uint32_t *tmp_src = (uint32_t *)src->pixels;
-    uint32_t *tmp_dst = (uint32_t *)dst->pixels;
+  	int w = 0,h = 0,src_x = 0,src_y = 0,dst_x = 0,dst_y = 0;
+    if (srcrect!=NULL)
+      w = srcrect->w,h = srcrect->h,src_x = srcrect->x,src_y = srcrect->y;
+    else
+      w = src->w,h = src->h;
+    if (dstrect)
+      dst_x = dstrect->x,dst_y = dstrect->y;
+    uint32_t *copyhelp_src = (uint32_t *)src->pixels;
+    uint32_t *copyhelp_dst = (uint32_t *)dst->pixels;
     for (int i = 0; i < h; i++) {
       for (int j = 0; j < w; j++) {
-        tmp_dst[(dst_y + i) * dst->w + dst_x + j] = tmp_src[(src_y + i) * src->w + src_x + j];
+        *(copyhelp_dst+(dst_y+ i) *dst->w + dst_x + j) = *(copyhelp_src+(src_y + i) *src->w + src_x + j);
       }
     }
 }
