@@ -1,7 +1,7 @@
-STUID = 231098216
-STUNAME = 田博文
+STUID =已删除
+STUNAME =已删除
 
-export TOKEN=fwoQWPF4
+export TOKEN=已删除
 
 # DO NOT modify the following code!!!
 
